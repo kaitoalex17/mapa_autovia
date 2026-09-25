@@ -24,6 +24,8 @@
 10. **[09. Plan de Desarrollo Modular por Pasos (Roadmap)](file:///C:/app/game_autopista/docs/09_PLAN_DESARROLLO_MODULAR_POR_PASOS.md)**: Hoja de ruta dividida en 8 pasos independientes y verificables (Cámara $\rightarrow$ Splines $\rightarrow$ Modelos 3D $\rightarrow$ Tráfico $\rightarrow$ Colisiones $\rightarrow$ Emergencias/DGT $\rightarrow$ Rutas/Hubs $\rightarrow$ Menús y Save/Load).
 11. **[10. Tiempo de Obra e Impacto Constructivo y Psicología del Conductor](file:///C:/app/game_autopista/docs/10_IMPACTO_OBRAS_Y_PSICOLOGIA_CONDUCTOR.md)**: Mecánica opcional de tiempo de obras con conos y maquinaria, más sistema de humor, estrés, frustración y furia al volante (*Road Rage*) con bocinazos e invasión de arcén.
 12. **[11. Diseño de la Interfaz Gráfica (HUD, Menús y UX)](file:///C:/app/game_autopista/docs/11_DISENO_INTERFAZ_GRAFICA_HUD_Y_UX.md)**: Barra superior de finanzas y siniestralidad, dock inferior de herramientas viales, paleta de colores oficial de carreteras españolas y notificaciones Toast del 112.
+13. **[12. Sistema de Localización Bilingüe (Español / Inglés)](file:///C:/app/game_autopista/docs/12_SISTEMA_LOCALIZACION_BILINGUE_ES_EN.md)**: Subsistema de internacionalización en tiempo real con tabla de cadenas y soporte multilingüe.
+14. **[13. Registro de Memoria y Progreso de Desarrollo (Dev Log)](file:///C:/app/game_autopista/docs/13_REGISTRO_DE_MEMORIA_Y_PROGRESO_DEV.md)**: Memoria persistente técnica con la matriz de estado de todos los módulos y decisiones de diseño.
 
 ---
 
