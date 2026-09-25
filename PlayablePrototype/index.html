@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autopistas de España - Prototipo Jugable DGT</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23004b87'/><path d='M30 80 L45 20 L55 20 L70 80 L58 80 L52 55 L48 55 L42 80 Z' fill='%23ffffff'/><circle cx='50' cy='35' r='5' fill='%2300c0f3'/></svg>">
+</head>
+<body>
+
+  <!-- CONTENEDOR DEL CANVAS 2.5D -->
+  <div id="canvas-container">
+    <canvas id="gameCanvas"></canvas>
+  </div>
+
+  <!-- HUD SUPERIOR (TOP BAR) -->
+  <header id="top-hud">
+    <div class="brand-badge">
+      <div class="dgt-logo-icon">DGT</div>
+      <div class="brand-title">
+        <span class="main-name" data-i18n="GAME_TITLE">Autopistas de España</span>
+        <span class="sub-name" data-i18n="SUB_TITLE">Centro de Gestión de Tráfico</span>
+      </div>
+    </div>
+
+    <!-- Presupuesto -->
+    <div class="stat-item">
+      <span class="stat-icon">💶</span>
+      <div class="stat-content">
+        <span class="stat-label" data-i18n="HUD_BUDGET">Presupuesto</span>
+        <span class="stat-value money" id="hud-budget">2.500.000 €</span>
+      </div>
+    </div>
+
+    <!-- Congestión Global -->
+    <div class="stat-item">
+      <span class="stat-icon">🚦</span>
+      <div class="stat-content">
+        <span class="stat-label" data-i18n="HUD_CONGESTION">Congestión</span>
+        <span class="stat-value congestion-low" id="hud-congestion">12%</span>
+      </div>
+    </div>
+
+    <!-- Siniestralidad / Accidentes -->
+    <div class="stat-item" id="btn-center-incident" style="cursor: pointer;" title="Click para centrar en siniestro">
+      <span class="stat-icon">⚠️</span>
+      <div class="stat-content">
+        <span class="stat-label" data-i18n="HUD_INCIDENTS">Siniestros</span>
+        <span class="stat-value" id="hud-incidents">0 Activos</span>
+      </div>
+    </div>
+
+    <!-- Furia al Volante (Road Rage) -->
+    <div class="stat-item">
+      <span class="stat-icon" id="hud-rage-icon">🙂</span>
+      <div class="stat-content">
+        <span class="stat-label" data-i18n="HUD_ROAD_RAGE">Furia al Volante</span>
+        <span class="stat-value" id="hud-rage">4%</span>
+      </div>
+    </div>
+
+    <!-- Control Temporal -->
+    <div class="time-controls">
+      <button class="time-btn" id="btn-pause" title="Pausar (Espacio)">⏸️</button>
+      <button class="time-btn active" id="btn-speed-1" title="Velocidad Normal (1)">1x</button>
+      <button class="time-btn" id="btn-speed-2" title="Velocidad Rápida (2)">2x</button>
+      <button class="time-btn" id="btn-speed-4" title="Velocidad Máxima (3)">4x</button>
+    </div>
+
+    <!-- Sonido y Audio -->
+    <button class="cam-btn" id="btn-audio" title="Activar/Silenciar Efectos de Audio" style="width: 32px; height: 32px; font-size: 13px;">🔊</button>
+
+    <!-- Selector de Idioma -->
+    <button class="lang-btn" id="btn-lang" title="Cambiar Idioma / Switch Language">
+      <span id="lang-flag">🇪🇸</span> <span id="lang-code">ES</span>
+    </button>
+
+    <!-- Botón de Ayuda -->
+    <button class="cam-btn" id="btn-help" title="Guía y Controles" style="width: 32px; height: 32px; font-size: 14px;">❓</button>
+  </header>
+
+  <!-- PANEL LATERAL IZQUIERDO: TOGGLES Y CONFIGURACIÓN -->
+  <aside id="side-panel">
+    <div class="panel-header">
+      <span class="panel-title"><span style="font-size: 14px;">⚙️</span> <span data-i18n="PANEL_SETTINGS">Control de Simulación</span></span>
+      <span style="font-size: 10px; color: var(--text-muted); font-weight: 700;">PROTOTYPE v1.0</span>
+    </div>
+
+    <div class="toggle-group">
+      <!-- Toggle Obras en tiempo real -->
+      <div class="toggle-item">
+        <div class="toggle-info">
+          <span class="toggle-title" data-i18n="TOGGLE_WORKS">Obras en Vivo (5s)</span>
+          <span class="toggle-sub" data-i18n="TOGGLE_WORKS_SUB">Conos y obreros antes de abrir</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="toggle-works" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <!-- Toggle Psicología y Furia -->
+      <div class="toggle-item">
+        <div class="toggle-info">
+          <span class="toggle-title" data-i18n="TOGGLE_RAGE">Psicología y Furia</span>
+          <span class="toggle-sub" data-i18n="TOGGLE_RAGE_SUB">Bocinas, emoticonos y estrés</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="toggle-rage" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <!-- Toggle Pegasus -->
+      <div class="toggle-item">
+        <div class="toggle-info">
+          <span class="toggle-title" data-i18n="TOGGLE_PEGASUS">Patrulla Pegasus</span>
+          <span class="toggle-sub" data-i18n="TOGGLE_PEGASUS_SUB">Helicóptero con radar láser</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="toggle-pegasus" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <!-- Toggle Clima DANA -->
+      <div class="toggle-item">
+        <div class="toggle-info">
+          <span class="toggle-title" data-i18n="TOGGLE_WEATHER">Clima DANA Lluvia</span>
+          <span class="toggle-sub" data-i18n="TOGGLE_WEATHER_SUB">Asfalto mojado y menor frenada</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="toggle-weather">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Acciones Rápidas de Prueba -->
+    <div class="side-actions">
+      <button class="action-btn danger" id="btn-trigger-jam">
+        <span>🚨</span> <span data-i18n="ACTION_CAUSE_JAM">Provocar Retención / Conos</span>
+      </button>
+      <button class="action-btn" id="btn-spawn-fleet">
+        <span>🚗</span> <span data-i18n="ACTION_SPAWN_WAVE">Generar Ola de Tráfico (+15)</span>
+      </button>
+      <button class="action-btn" id="btn-load-scenario">
+        <span>🔄</span> <span data-i18n="ACTION_LOAD_SCENARIO">Reiniciar Escenario A-4 / M-40</span>
+      </button>
+      <button class="action-btn" id="btn-clear-map">
+        <span>🗑️</span> <span data-i18n="ACTION_CLEAR_MAP">Limpiar Red Viaria</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- PANEL LATERAL DERECHO: MONITOR RADAR PEGASUS -->
+  <aside id="pegasus-box">
+    <div class="pegasus-header">
+      <span class="pegasus-title">
+        <span>🚁</span> <span data-i18n="PEGASUS_RADAR_TITLE">DGT PEGASUS MX-15</span>
+      </span>
+      <div class="pegasus-live-dot" title="Sensor Operativo"></div>
+    </div>
+
+    <div class="pegasus-screen">
+      <div class="pegasus-row">
+        <span>ALTITUD:</span>
+        <span id="pegasus-alt">320 m</span>
+      </div>
+      <div class="pegasus-row">
+        <span>ESTADO:</span>
+        <span id="pegasus-status" style="color: #34d399;">PATRULLA ACTIVA</span>
+      </div>
+      <div class="pegasus-row">
+        <span>INFRACTORES:</span>
+        <span id="pegasus-infractions">0 sancionados</span>
+      </div>
+      <div class="pegasus-row">
+        <span>RECAUDACIÓN:</span>
+        <span id="pegasus-collected" style="color: #facc15;">+0 €</span>
+      </div>
+    </div>
+
+    <div class="pegasus-fines-log" id="pegasus-log">
+      <!-- Entradas dinámicas de sanciones -->
+    </div>
+  </aside>
+
+  <!-- DOCK INFERIOR DE HERRAMIENTAS VIALES -->
+  <nav id="bottom-dock">
+    <button class="dock-btn active" id="tool-inspect" data-tool="inspect">
+      <span class="dock-key">Q</span>
+      <span class="dock-icon">🔍</span>
+      <span class="dock-name" data-i18n="TOOL_INSPECT">Inspeccionar</span>
+    </button>
+
+    <div class="dock-divider"></div>
+
+    <button class="dock-btn" id="tool-convencional" data-tool="convencional">
+      <span class="dock-key">1</span>
+      <span class="dock-icon">🛣️</span>
+      <span class="dock-name" data-i18n="TOOL_CONVENCIONAL">Carretera 90</span>
+    </button>
+
+    <button class="dock-btn" id="tool-autovia" data-tool="autovia">
+      <span class="dock-key">2</span>
+      <span class="dock-icon">🛤️</span>
+      <span class="dock-name" data-i18n="TOOL_AUTOVIA">Autovía 2x2</span>
+    </button>
+
+    <button class="dock-btn" id="tool-enlace" data-tool="enlace">
+      <span class="dock-key">3</span>
+      <span class="dock-icon">↗️</span>
+      <span class="dock-name" data-i18n="TOOL_ENLACE">Enlace / Ramal</span>
+    </button>
+
+    <div class="dock-divider"></div>
+
+    <button class="dock-btn" id="tool-police-check" data-tool="police_check">
+      <span class="dock-key">4</span>
+      <span class="dock-icon">🚓</span>
+      <span class="dock-name" data-i18n="TOOL_POLICE">Control Guardia Civil</span>
+    </button>
+
+    <button class="dock-btn" id="tool-demolish" data-tool="demolish">
+      <span class="dock-key">5</span>
+      <span class="dock-icon">🚜</span>
+      <span class="dock-name" data-i18n="TOOL_DEMOLISH">Demoler</span>
+    </button>
+  </nav>
+
+  <!-- CONTROLES FLOTANTES DE CÁMARA -->
+  <div id="camera-controls">
+    <button class="cam-btn" id="btn-zoom-in" title="Acercar Cámara (+)">➕</button>
+    <button class="cam-btn" id="btn-zoom-out" title="Alejar Cámara (-)">➖</button>
+    <button class="cam-btn" id="btn-center-cam" title="Centrar Cámara en Autovía (C)">🎯</button>
+  </div>
+
+  <!-- CONTENEDOR DE ALERTAS TOAST -->
+  <div id="toast-container"></div>
+
+  <!-- MODAL DE AYUDA Y GUÍA DE CONTROLES -->
+  <div id="help-modal">
+    <div class="help-content">
+      <div class="help-header">
+        <h2 class="help-title" data-i18n="HELP_TITLE">Guía Rápida de Juego y Controles</h2>
+        <button class="close-btn" id="btn-close-help">&times;</button>
+      </div>
+
+      <div class="help-grid">
+        <div>
+          <div class="help-section-title" data-i18n="HELP_NAV_TITLE">🎮 Navegación de Cámara</div>
+          <p><span class="key-badge">W, A, S, D</span> o <span class="key-badge">Flechas</span>: Desplazar vista cenital.</p>
+          <p><span class="key-badge">Rueda Ratón</span>: Zoom suave (0.35x a 3.0x).</p>
+          <p><span class="key-badge">Arrastre Ratón</span>: Botón central o derecho para mover el mapa.</p>
+          <p><span class="key-badge">C</span> o Botón <span class="key-badge">🎯</span>: Centrar cámara en el corredor activo.</p>
+        </div>
+
+        <div>
+          <div class="help-section-title" data-i18n="HELP_BUILD_TITLE">🏗️ Construcción de Carreteras</div>
+          <p>1. Selecciona <strong>Carretera 90</strong>, <strong>Autovía 2x2</strong> o <strong>Ramal</strong> en el dock.</p>
+          <p>2. Haz <strong>clic izquierdo y arrastra</strong> sobre el terreno para trazar la vía con splines y curvas suaves.</p>
+          <p>3. Si <strong>Obras en Vivo</strong> está activado, verás conos y maquinaria durante 5 segundos antes de inaugurarse.</p>
+        </div>
+
+        <div>
+          <div class="help-section-title" data-i18n="HELP_TRAFFIC_TITLE">🚗 Tráfico y Psicología</div>
+          <p>• Los coches usan modelos físicos <strong>IDM y MOBIL</strong> para guardar distancia y cambiar de carril.</p>
+          <p>• En retenciones, el estrés sube: 🙂 Zen &rarr; 😐 Impaciente &rarr; 😡 <strong>Furia al Volante</strong>.</p>
+          <p>• Los conductores furiosos tocan el claxon y adelantan bruscamente.</p>
+        </div>
+
+        <div>
+          <div class="help-section-title" data-i18n="HELP_PEGASUS_TITLE">🚁 Helicóptero Pegasus DGT</div>
+          <p>• Sobrevuela el corredor proyectando un cono de radar láser.</p>
+          <p>• Detecta excesos a más de 120 km/h y acoso pegado al parachoques.</p>
+          <p>• Cada infracción emite una multa electrónica (€) que suma a tu presupuesto.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

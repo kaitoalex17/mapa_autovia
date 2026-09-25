@@ -15,4 +15,18 @@ class AUTOPISTASESPANA_API AAutopistasGameModeBase : public AGameModeBase
 
 public:
 	AAutopistasGameModeBase();
+
+	virtual void BeginPlay() override;
+
+	// Configuracion por defecto del modo de juego para obras viales
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode Settings|Construction")
+	bool bDefaultEnableConstructionImpact = true;
+
+	// Configuracion por defecto para frustracion de conductores
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode Settings|Traffic Psychology")
+	bool bDefaultEnableDriverFrustration = true;
+
+	// Cambiar los ajustes en tiempo de ejecucion a traves del GameMode
+	UFUNCTION(BlueprintCallable, Category = "GameMode Settings")
+	void SetSimulationSettings(bool bEnableConstruction, bool bEnableFrustration);
 };

@@ -51,6 +51,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Traffic Metrics")
 	float GetCongestionPercentage() const;
 
+	/** Porcentaje de conductores en estado de furia al volante (Road Rage) */
+	UFUNCTION(BlueprintCallable, Category = "Traffic Metrics")
+	float GetRoadRagePercentage() const;
+
+	/** Media global de frustracion de todos los conductores de la red */
+	UFUNCTION(BlueprintCallable, Category = "Traffic Metrics")
+	float GetAverageFrustrationPercentage() const;
+
 	// Obtener lista de vehiculos activos en la simulacion
 	const TArray<TWeakObjectPtr<ATrafficVehicleAgent>>& GetActiveVehicles() const { return ActiveVehicles; }
 

@@ -27,6 +27,16 @@ enum class EIncidentState : uint8
 	EnRemolque       UMETA(DisplayName = "Siendo Remolcado por Grua")
 };
 
+/** Condición psicológica y temperamento del conductor en carretera */
+UENUM(BlueprintType)
+enum class ECondicionPsicologica : uint8
+{
+	Calmado          UMETA(DisplayName = "Calmado (Zen - Respeto Escrupuloso)"),
+	Impaciente       UMETA(DisplayName = "Impaciente (Distancia Reducida)"),
+	Estresado        UMETA(DisplayName = "Estresado (Ráfagas, Bocina y Tensión)"),
+	FuriaAlVolante   UMETA(DisplayName = "Furia al Volante (Road Rage / Temerario)")
+};
+
 /** Estado psicologico y humor del conductor */
 UENUM(BlueprintType)
 enum class EDriverMood : uint8
@@ -35,6 +45,46 @@ enum class EDriverMood : uint8
 	Impaciente       UMETA(DisplayName = "Impaciente"),
 	Irritado         UMETA(DisplayName = "Irritado (Uso de Claxon)"),
 	FuriaAlVolante   UMETA(DisplayName = "Furia al Volante (Road Rage / Temerario)")
+};
+
+/** Parametros configurables del modelo de psicologia y estres del conductor */
+USTRUCT(BlueprintType)
+struct FDriverPsychologyParams
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Driver Psychology")
+	float PatienceThresholdSeconds = 15.0f; // Tiempo de paciencia antes de degradacion acelerada
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Driver Psychology")
+	float JamStressRatePerSec = 4.5f; // Tasa de incremento de frustracion por segundo detenido en atasco
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Driver Psychology")
+	float SlowTrafficStressRatePerSec = 1.8f; // Tasa de acumulacion al circular a baja velocidad (< 45% v0)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Driver Psychology")
+	float FreeFlowReliefRatePerSec = 2.5f; // Tasa de alivio/recuperacion al circular fluido
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Driver Psychology")
+	float CalmSafeTimeHeadway = 1.4f; // Distancia temporal modo Calmado (segundos)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Driver Psychology")
+	float ImpatientSafeTimeHeadway = 0.9f; // Modo Impaciente
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Driver Psychology")
+	float StressedSafeTimeHeadway = 0.5f; // Modo Estresado
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Driver Psychology")
+	float RageSafeTimeHeadway = 0.2f; // Modo Furia: Acoso trasero / tailgating critico (0.2s)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Driver Psychology")
+	float CalmJamDistanceCm = 250.0f; // 2.5 metros
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Driver Psychology")
+	float RageJamDistanceCm = 40.0f; // 40 centimetros pegado a la chapa en furia al volante
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Driver Psychology")
+	float RearEndCollisionMultiplier = 5.0f; // Multiplicador x5 del riesgo de colision por alcance en furia
 };
 
 /** Parametros del Modelo de Conductor Inteligente (IDM) */

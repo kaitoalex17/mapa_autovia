@@ -1,5 +1,8 @@
 #include "SaveSystem/SaveLoadSubsystem.h"
+#include "SaveSystem/AutopistasSaveGame.h"
+#include "Economy/EconomySubsystem.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
 #include "AutopistasEspana.h"
 
 bool USaveLoadSubsystem::SaveGame(const FString& SlotName)
@@ -12,6 +15,16 @@ bool USaveLoadSubsystem::SaveGame(const FString& SlotName)
 
 	SaveGameObject->SaveSlotName = SlotName;
 	SaveGameObject->Timestamp = FDateTime::Now();
+
+	if (UWorld* World = GetWorld())
+	{
+		if (UEconomySubsystem* Economy = World->GetSubsystem<UEconomySubsystem>())
+		{
+			SaveGameObject->CashEuros = Economy->CurrentCashEuros;
+			SaveGameObject->bEnableConstructionImpact = Economy->IsConstructionImpactEnabled();
+			SaveGameObject->bEnableDriverFrustration = Economy->IsDriverFrustrationEnabled();
+		}
+	}
 
 	const bool bSuccess = UGameplayStatics::SaveGameToSlot(SaveGameObject, SlotName, 0);
 	if (bSuccess)
@@ -37,6 +50,16 @@ UAutopistasSaveGame* USaveLoadSubsystem::LoadGame(const FString& SlotName)
 	UAutopistasSaveGame* LoadedGame = Cast<UAutopistasSaveGame>(UGameplayStatics::LoadGameFromSlot(SlotName, 0));
 	if (LoadedGame)
 	{
+		if (UWorld* World = GetWorld())
+		{
+			if (UEconomySubsystem* Economy = World->GetSubsystem<UEconomySubsystem>())
+			{
+				Economy->CurrentCashEuros = LoadedGame->CashEuros;
+				Economy->SetEnableConstructionImpact(LoadedGame->bEnableConstructionImpact);
+				Economy->SetEnableDriverFrustration(LoadedGame->bEnableDriverFrustration);
+			}
+		}
+
 		UE_LOG(LogAutopistas, Log, TEXT("Partida cargada con exito desde ranura: %s"), *SlotName);
 	}
 

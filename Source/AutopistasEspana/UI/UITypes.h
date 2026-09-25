@@ -14,6 +14,8 @@ enum class EActiveBuildTool : uint8
 	RotondaGlorieta      UMETA(DisplayName = "Glorieta / Rotonda"),
 	PuenteViaducto       UMETA(DisplayName = "Viaducto / Puente"),
 	TunelMontana         UMETA(DisplayName = "Tunel Subterraneo"),
+	Peaje                UMETA(DisplayName = "Peaje / Tronco de Autovia"),
+	PasoANivel           UMETA(DisplayName = "Paso a Nivel ADIF Clase C"),
 	LineasTransporte     UMETA(DisplayName = "Lineas de Autobuses / Fletes"),
 	ControlesDGT         UMETA(DisplayName = "Operativo DGT / Conos / Alcoholemia"),
 	HelicopteroPegasus   UMETA(DisplayName = "Patrulla Aerea Pegasus"),

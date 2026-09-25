@@ -127,3 +127,52 @@ float UTrafficSimulationSubsystem::GetCongestionPercentage() const
 	const float Ratio = FMath::Clamp(AvgSpeed / FreeFlowSpeed, 0.0f, 1.0f);
 	return (1.0f - Ratio) * 100.0f;
 }
+
+float UTrafficSimulationSubsystem::GetRoadRagePercentage() const
+{
+	if (ActiveVehicles.Num() == 0)
+	{
+		return 0.0f;
+	}
+
+	int32 RageCount = 0;
+	int32 ValidCount = 0;
+
+	for (const auto& VehPtr : ActiveVehicles)
+	{
+		if (VehPtr.IsValid())
+		{
+			++ValidCount;
+			if (VehPtr->CondicionPsicologica == ECondicionPsicologica::FuriaAlVolante ||
+				VehPtr->DriverMood == EDriverMood::FuriaAlVolante)
+			{
+				++RageCount;
+			}
+		}
+	}
+
+	return ValidCount > 0 ? ((static_cast<float>(RageCount) / ValidCount) * 100.0f) : 0.0f;
+}
+
+float UTrafficSimulationSubsystem::GetAverageFrustrationPercentage() const
+{
+	if (ActiveVehicles.Num() == 0)
+	{
+		return 0.0f;
+	}
+
+	float FrustrationSum = 0.0f;
+	int32 ValidCount = 0;
+
+	for (const auto& VehPtr : ActiveVehicles)
+	{
+		if (VehPtr.IsValid())
+		{
+			FrustrationSum += VehPtr->FrustrationPercent;
+			++ValidCount;
+		}
+	}
+
+	return ValidCount > 0 ? (FrustrationSum / ValidCount) : 0.0f;
+}
+

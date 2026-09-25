@@ -21,6 +21,12 @@ struct FSavedRoadSegmentData
 
 	UPROPERTY(SaveGame)
 	FRoadCrossSection CrossSection;
+
+	UPROPERTY(SaveGame)
+	ERoadConstructionPhase ConstructionPhase = ERoadConstructionPhase::AbiertaAlTrafico;
+
+	UPROPERTY(SaveGame)
+	float ConstructionProgress = 1.0f;
 };
 
 /**
@@ -44,6 +50,13 @@ public:
 	// Estado Economico
 	UPROPERTY(VisibleAnywhere, Category = "Economy")
 	int64 CashEuros = 5000000;
+
+	// Opciones de Simulacion Viales
+	UPROPERTY(VisibleAnywhere, Category = "Simulation Settings")
+	bool bEnableConstructionImpact = true;
+
+	UPROPERTY(VisibleAnywhere, Category = "Simulation Settings")
+	bool bEnableDriverFrustration = true;
 
 	// Configuracion del Terreno
 	UPROPERTY(VisibleAnywhere, Category = "World")

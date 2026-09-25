@@ -1,0 +1,755 @@
+/* ==========================================================================
+   AUTOPISTAS DE ESPAÑA - PROTOTIPO JUGABLE HTML5 / CANVAS 2.5D
+   Estilos CSS del Sistema de Interfaz HUD y Centro de Control DGT
+   ========================================================================== */
+
+:root {
+  --dgt-blue: #004b87;
+  --dgt-blue-dark: #002b52;
+  --dgt-blue-light: #0084c8;
+  --dgt-cyan: #00c0f3;
+  --dgt-amber: #f59e0b;
+  --dgt-red: #ef4444;
+  --dgt-green: #10b981;
+  --gc-green: #005930;
+  
+  --bg-hud: rgba(15, 23, 42, 0.88);
+  --bg-hud-card: rgba(30, 41, 59, 0.75);
+  --bg-hud-hover: rgba(51, 65, 85, 0.9);
+  --border-hud: rgba(148, 163, 184, 0.25);
+  --border-active: #00a0e3;
+  
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #0b1118;
+  font-family: var(--font-family);
+  color: var(--text-main);
+}
+
+#canvas-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  cursor: crosshair;
+}
+
+canvas#gameCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ==========================================================================
+   HUD - BARRA SUPERIOR (TOP BAR)
+   ========================================================================== */
+#top-hud {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 20px;
+  background: var(--bg-hud);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-hud);
+  border-radius: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), 0 0 20px rgba(0, 160, 227, 0.15);
+  max-width: 95vw;
+}
+
+.brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-right: 1px solid var(--border-hud);
+  padding-right: 16px;
+}
+
+.dgt-logo-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--dgt-blue), var(--dgt-cyan));
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 160, 227, 0.4);
+}
+
+.brand-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title .main-name {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #fff;
+}
+
+.brand-title .sub-name {
+  font-size: 10px;
+  color: var(--dgt-cyan);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 10px;
+  background: var(--bg-hud-card);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-icon {
+  font-size: 17px;
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-value.money {
+  color: #34d399;
+}
+
+.stat-value.congestion-high {
+  color: var(--dgt-red);
+}
+
+.stat-value.congestion-med {
+  color: var(--dgt-amber);
+}
+
+.stat-value.congestion-low {
+  color: var(--dgt-green);
+}
+
+.time-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 20px;
+  padding: 3px 6px;
+  border: 1px solid var(--border-hud);
+}
+
+.time-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.time-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.time-btn.active {
+  background: var(--dgt-blue-light);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(0, 160, 227, 0.5);
+}
+
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9));
+  border: 1px solid var(--dgt-cyan);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.2s;
+}
+
+.lang-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(0, 192, 243, 0.4);
+}
+
+/* ==========================================================================
+   PANEL LATERAL IZQUIERDO - TOGGLES Y CONFIGURACIÓN EN VIVO
+   ========================================================================== */
+#side-panel {
+  position: absolute;
+  top: 90px;
+  left: 20px;
+  z-index: 10;
+  width: 290px;
+  background: var(--bg-hud);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-hud);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-hud);
+}
+
+.panel-title {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--dgt-cyan);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toggle-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.toggle-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-hud-card);
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.toggle-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.toggle-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.toggle-sub {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* Switch toggle */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #334155;
+  transition: 0.25s;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.25s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+input:checked + .slider {
+  background-color: var(--dgt-blue-light);
+  box-shadow: 0 0 10px rgba(0, 160, 227, 0.5);
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.side-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--border-hud);
+  padding-top: 12px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--bg-hud-card);
+  border: 1px solid var(--border-hud);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s, border-color 0.2s;
+}
+
+.action-btn:hover {
+  background: var(--bg-hud-hover);
+  border-color: var(--dgt-cyan);
+}
+
+.action-btn.danger {
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.action-btn.danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: var(--dgt-red);
+}
+
+/* ==========================================================================
+   PANEL LATERAL DERECHO - RADAR PEGASUS & MONITOREO
+   ========================================================================== */
+#pegasus-box {
+  position: absolute;
+  top: 90px;
+  right: 20px;
+  z-index: 10;
+  width: 270px;
+  background: var(--bg-hud);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 192, 243, 0.4);
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 192, 243, 0.15);
+}
+
+.pegasus-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.pegasus-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--dgt-cyan);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pegasus-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--dgt-green);
+  box-shadow: 0 0 8px var(--dgt-green);
+  animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+.pegasus-screen {
+  background: #02111d;
+  border: 1px solid rgba(0, 192, 243, 0.3);
+  border-radius: 10px;
+  padding: 10px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #6ee7b7;
+  position: relative;
+  overflow: hidden;
+}
+
+.pegasus-screen::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15), rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
+  pointer-events: none;
+}
+
+.pegasus-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.pegasus-fines-log {
+  margin-top: 10px;
+  max-height: 110px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fine-entry {
+  background: rgba(239, 68, 68, 0.15);
+  border-left: 3px solid var(--dgt-red);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: slide-in 0.25s ease-out;
+}
+
+@keyframes slide-in {
+  from { transform: translateX(20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* ==========================================================================
+   DOCK INFERIOR DE HERRAMIENTAS (BOTTOM DOCK)
+   ========================================================================== */
+#bottom-dock {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background: var(--bg-hud);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-hud);
+  border-radius: 28px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 160, 227, 0.15);
+}
+
+.dock-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-hud-card);
+  border: 1px solid var(--border-hud);
+  color: var(--text-muted);
+  width: 76px;
+  height: 64px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.dock-btn:hover {
+  background: var(--bg-hud-hover);
+  color: #fff;
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dock-btn.active {
+  background: linear-gradient(135deg, var(--dgt-blue), var(--dgt-blue-light));
+  border-color: var(--dgt-cyan);
+  color: #fff;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 160, 227, 0.45);
+}
+
+.dock-icon {
+  font-size: 22px;
+  margin-bottom: 2px;
+}
+
+.dock-name {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-align: center;
+  line-height: 1.1;
+}
+
+.dock-key {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 800;
+}
+
+.dock-divider {
+  width: 1px;
+  height: 44px;
+  background: var(--border-hud);
+  margin: 0 4px;
+}
+
+/* ==========================================================================
+   ALERTAS TOAST DGT 112 (ESQUINA INFERIOR DERECHA)
+   ========================================================================== */
+#toast-container {
+  position: absolute;
+  bottom: 100px;
+  right: 20px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  min-width: 280px;
+  max-width: 380px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  border-left: 4px solid var(--dgt-cyan);
+  animation: toast-in 0.3s ease-out;
+  color: #fff;
+}
+
+.toast.toast-accident {
+  border-left-color: var(--dgt-red);
+}
+
+.toast.toast-fine {
+  border-left-color: var(--dgt-green);
+}
+
+.toast.toast-works {
+  border-left-color: var(--dgt-amber);
+}
+
+@keyframes toast-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.toast-icon {
+  font-size: 24px;
+}
+
+.toast-text {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.toast-text strong {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 2px;
+  color: #fff;
+}
+
+/* ==========================================================================
+   MINIMAPA / BRÚJULA / CONTROLES DE CÁMARA
+   ========================================================================== */
+#camera-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cam-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--bg-hud);
+  border: 1px solid var(--border-hud);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.cam-btn:hover {
+  background: var(--bg-hud-hover);
+  border-color: var(--dgt-cyan);
+  transform: scale(1.08);
+}
+
+/* ==========================================================================
+   OVERLAY DE AYUDA / GUÍA DE CONTROLES
+   ========================================================================== */
+#help-modal {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 50;
+  background: rgba(5, 10, 20, 0.75);
+  backdrop-filter: blur(8px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+#help-modal.open {
+  display: flex;
+}
+
+.help-content {
+  background: var(--bg-hud);
+  border: 1px solid var(--dgt-cyan);
+  border-radius: 20px;
+  max-width: 600px;
+  width: 90%;
+  padding: 26px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 192, 243, 0.2);
+}
+
+.help-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-hud);
+  padding-bottom: 12px;
+}
+
+.help-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--dgt-cyan);
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #fff;
+}
+
+.help-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.help-section-title {
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  padding-bottom: 4px;
+}
+
+.key-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #38bdf8;
+  font-family: monospace;
+}
