@@ -3,6 +3,8 @@
 #include "CoreMinimal.h"
 #include "RoadTypes.generated.h"
 
+class URoadSplineComponent;
+
 /** Tipologias de Carreteras segun la Red Viaria de Espana */
 UENUM(BlueprintType)
 enum class ERoadCategory : uint8
@@ -23,14 +25,156 @@ enum class ERoadElevationType : uint8
 	TunelSubterraneo   UMETA(DisplayName = "Tunel Bajo Montana")
 };
 
+/** Tipos de Enlaces, Intersecciones y Pasos Viales */
+UENUM(BlueprintType)
+enum class EJunctionType : uint8
+{
+	T_Junction         UMETA(DisplayName = "Interseccion en T"),
+	Trumpet            UMETA(DisplayName = "Enlace tipo Trompeta"),
+	Diamond            UMETA(DisplayName = "Enlace tipo Diamante"),
+	Roundabout         UMETA(DisplayName = "Glorieta / Rotonda Multicarril"),
+	DirectMerge        UMETA(DisplayName = "Incorporacion Directa (Cuna de Aceleracion)"),
+	DirectDiverge      UMETA(DisplayName = "Salida Directa (Cuna de Deceleracion)"),
+	OverpassFlyover    UMETA(DisplayName = "Paso a Distinto Nivel (Flyover / Viaducto Continuo)")
+};
+
 /** Fases del tiempo de construccion de carreteras (activable/desactivable en ajustes) */
 UENUM(BlueprintType)
 enum class ERoadConstructionPhase : uint8
 {
-	AbiertaAlTrafico          UMETA(DisplayName = "Abierta al Tráfico (Completada)"),
+	AbiertaAlTrafico          UMETA(DisplayName = "Abierta al Trafico (Completada)"),
 	MovimientoTierras         UMETA(DisplayName = "Fase 1: Replanteo y Desmonte (40 km/h)"),
-	ExtendidoAsfaltado        UMETA(DisplayName = "Fase 2: Asfaltado y Compactación (40 km/h)"),
+	ExtendidoAsfaltado        UMETA(DisplayName = "Fase 2: Asfaltado y Compactacion (40 km/h)"),
 	PinturaYBalizamiento      UMETA(DisplayName = "Fase 3: Pintado y Balizamiento (60 km/h)")
+};
+
+/**
+ * Conexion a nivel de carril entre dos carreteras segun Norma 8.1-IC.
+ * Define el carril de origen, carril de destino, la via receptora y la longitud de transicion lateral.
+ */
+USTRUCT(BlueprintType)
+struct FLaneConnection
+{
+	GENERATED_BODY()
+
+	/** Indice del carril de origen en la via emisora (0 = carril derecho) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lane Connection")
+	int32 SourceLaneIndex = 0;
+
+	/** Indice del carril de destino en la via receptora (0 = carril derecho) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lane Connection")
+	int32 TargetLaneIndex = 0;
+
+	/** Carretera / Spline vial de destino */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lane Connection")
+	URoadSplineComponent* TargetRoad = nullptr;
+
+	/** Longitud de transicion o cuna de aceleracion / deceleracion segun Norma 8.1-IC (en cm / UU, ej. 15000 a 20000 UU = 150-200m) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lane Connection")
+	float TransitionLength = 15000.0f;
+
+	/** Indica si es incorporacion (merge) o salida (diverge) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lane Connection")
+	bool bIsMerge = true;
+
+	/** Velocidad de diseno aconsejada en el ramal / enlace (km/h) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lane Connection")
+	float AdvisorySpeedKmh = 60.0f;
+
+	FLaneConnection()
+		: SourceLaneIndex(0)
+		, TargetLaneIndex(0)
+		, TargetRoad(nullptr)
+		, TransitionLength(15000.0f)
+		, bIsMerge(true)
+		, AdvisorySpeedKmh(60.0f)
+	{
+	}
+
+	FLaneConnection(int32 InSourceLane, int32 InTargetLane, URoadSplineComponent* InTargetRoad, float InTransitionLength = 15000.0f, bool bInMerge = true, float InAdvisorySpeed = 60.0f)
+		: SourceLaneIndex(InSourceLane)
+		, TargetLaneIndex(InTargetLane)
+		, TargetRoad(InTargetRoad)
+		, TransitionLength(InTransitionLength)
+		, bIsMerge(bInMerge)
+		, AdvisorySpeedKmh(InAdvisorySpeed)
+	{
+	}
+};
+
+/**
+ * Nodo de Enlace / Interseccion Vial.
+ * Agrupa las carreteras convergentes y las conexiones carril a carril validas,
+ * permitiendo ruteo topologico exacto y prevencion de colisiones en pasos a distinto nivel.
+ */
+USTRUCT(BlueprintType)
+struct FRoadJunctionNode
+{
+	GENERATED_BODY()
+
+	/** Identificador unico del nodo de enlace */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Road Junction")
+	FGuid JunctionId;
+
+	/** Denominacion tecnica o cartografica del enlace */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Road Junction")
+	FName JunctionName = NAME_None;
+
+	/** Ubicacion tridimensional en coordenadas de mundo */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Road Junction")
+	FVector WorldLocation = FVector::ZeroVector;
+
+	/** Tipologia del enlace vial */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Road Junction")
+	EJunctionType JunctionType = EJunctionType::DirectMerge;
+
+	/** Carreteras o ramales que confluyen en este nudo */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Road Junction")
+	TArray<URoadSplineComponent*> ConnectedRoads;
+
+	/** Lista de conexiones de carril validas y reglamentarias */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Road Junction")
+	TArray<FLaneConnection> LaneConnections;
+
+	FRoadJunctionNode()
+		: JunctionId(FGuid::NewGuid())
+		, JunctionName(NAME_None)
+		, WorldLocation(FVector::ZeroVector)
+		, JunctionType(EJunctionType::DirectMerge)
+	{
+	}
+
+	FRoadJunctionNode(const FVector& InLocation, EJunctionType InType, FName InName = NAME_None)
+		: JunctionId(FGuid::NewGuid())
+		, JunctionName(InName)
+		, WorldLocation(InLocation)
+		, JunctionType(InType)
+	{
+	}
+
+	bool IsValid() const
+	{
+		return JunctionId.IsValid();
+	}
+
+	bool ContainsRoad(const URoadSplineComponent* Road) const
+	{
+		return ConnectedRoads.Contains(Road);
+	}
+
+	void AddRoad(URoadSplineComponent* Road)
+	{
+		if (Road && !ConnectedRoads.Contains(Road))
+		{
+			ConnectedRoads.Add(Road);
+		}
+	}
+
+	void AddLaneConnection(int32 SourceLane, int32 TargetLane, URoadSplineComponent* TargetRoad, float TransitionLength = 15000.0f, bool bIsMerge = true, float AdvisorySpeed = 60.0f)
+	{
+		LaneConnections.Add(FLaneConnection(SourceLane, TargetLane, TargetRoad, TransitionLength, bIsMerge, AdvisorySpeed));
+		AddRoad(TargetRoad);
+	}
 };
 
 /** Parametros de configuracion temporal y fisica para las obras viales */
@@ -77,10 +221,10 @@ struct FRoadCrossSection
 	float LaneWidth = 350.0f; // 3.50 metros segun Norma 3.1-IC
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Road Geometry")
-	float OuterShoulderWidth = 250.0f; // Arcén exterior (2.50 metros)
+	float OuterShoulderWidth = 250.0f; // Arcen exterior (2.50 metros)
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Road Geometry")
-	float InnerShoulderWidth = 100.0f; // Arcén interior (1.00 metro)
+	float InnerShoulderWidth = 100.0f; // Arcen interior (1.00 metro)
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Road Geometry")
 	float MedianWidth = 200.0f; // Mediana central (2.00 metros)
@@ -95,5 +239,12 @@ struct FRoadCrossSection
 	float GetOneWayCarriagewayWidth() const
 	{
 		return OuterShoulderWidth + (NumLanesDirection * LaneWidth) + InnerShoulderWidth;
+	}
+
+	// Calcula la distancia lateral desde el eje del spline al centro del carril indicado (0 = carril derecho)
+	float GetLaneCenterOffset(int32 LaneIndex) const
+	{
+		const float ClampedLane = FMath::Clamp(LaneIndex, 0, FMath::Max(0, NumLanesDirection - 1));
+		return (static_cast<float>(ClampedLane) + 0.5f) * LaneWidth;
 	}
 };

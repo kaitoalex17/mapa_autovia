@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Boca de Tunel de Montana en Herradura -->
+  <path d="M10 56 L10 32 C10 18, 54 18, 54 32 L54 56 Z" fill="#0f172a" stroke="#64748b" stroke-width="3"/>
+  <!-- Boveda de hormigon interior -->
+  <path d="M18 56 L18 34 C18 24, 46 24, 46 34 L46 56 Z" fill="#020617"/>
+  <!-- Macizo rocoso superior -->
+  <path d="M4 36 L16 12 L32 8 L48 14 L60 36" stroke="#78716c" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <!-- Calzada entrando con linea reflectante -->
+  <line x1="32" y1="42" x2="32" y2="56" stroke="#facc15" stroke-width="2.5" stroke-dasharray="3 3"/>
+</svg>

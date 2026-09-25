@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Borrasca DANA Torrencial con Isobaras -->
+  <path d="M18 36 C14 36, 10 32, 10 26 C10 20, 16 16, 22 16 C24 10, 34 8, 42 14 C48 12, 54 16, 54 24 C58 26, 58 34, 52 36 Z" fill="#334155" stroke="#94a3b8" stroke-width="2"/>
+  <!-- Precipitación vectorial inclinada -->
+  <line x1="20" y1="42" x2="16" y2="54" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="30" y1="42" x2="26" y2="54" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="40" y1="42" x2="36" y2="54" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="50" y1="42" x2="46" y2="54" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

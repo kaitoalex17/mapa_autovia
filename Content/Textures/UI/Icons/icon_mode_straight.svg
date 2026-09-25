@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Modo Alineacion Recta CAD -->
+  <line x1="12" y1="52" x2="52" y2="12" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="12" cy="52" r="5" fill="#0284c7" stroke="#ffffff" stroke-width="2"/>
+  <circle cx="52" cy="12" r="5" fill="#0284c7" stroke="#ffffff" stroke-width="2"/>
+  <!-- Regla graduada CAD -->
+  <line x1="22" y1="38" x2="26" y2="42" stroke="#f8fafc" stroke-width="1.5"/>
+  <line x1="32" y1="28" x2="36" y2="32" stroke="#f8fafc" stroke-width="1.5"/>
+  <line x1="42" y1="18" x2="46" y2="22" stroke="#f8fafc" stroke-width="1.5"/>
+</svg>

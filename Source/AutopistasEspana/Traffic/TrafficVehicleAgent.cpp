@@ -2,6 +2,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Roads/RoadSplineComponent.h"
 #include "Roads/RoadSegmentActor.h"
+#include "Roads/RoadNetworkSubsystem.h"
 #include "Traffic/TrafficSimulationSubsystem.h"
 #include "Economy/EconomySubsystem.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -160,7 +161,49 @@ void ATrafficVehicleAgent::Tick(float DeltaTime)
 
 		if (DistanceAlongSpline >= SplineTotalLength)
 		{
-			DistanceAlongSpline = FMath::Fmod(DistanceAlongSpline, SplineTotalLength);
+			bool bTransitioned = false;
+			if (UWorld* World = GetWorld())
+			{
+				if (URoadNetworkSubsystem* RoadNetwork = World->GetSubsystem<URoadNetworkSubsystem>())
+				{
+					const TArray<FRoadJunctionNode> Junctions = RoadNetwork->GetJunctionsForRoad(CurrentRoadSpline.Get());
+					for (const FRoadJunctionNode& Junction : Junctions)
+					{
+						for (const FLaneConnection& Conn : Junction.LaneConnections)
+						{
+							if (Conn.SourceLaneIndex == CurrentLaneIndex && Conn.TargetRoad && Conn.TargetRoad != CurrentRoadSpline.Get())
+							{
+								// Transicion al carril conectado de la nueva carretera segun Norma 8.1-IC
+								float TransitionLen = Conn.TransitionLength;
+								const int32 NewLane = RoadNetwork->GetNextConnectedLaneWithTransition(CurrentRoadSpline.Get(), CurrentLaneIndex, Conn.TargetRoad, TransitionLen);
+
+								const FVector CurrentWorldLocation = GetActorLocation();
+								const float TargetKey = Conn.TargetRoad->FindInputKeyClosestToWorldLocation(CurrentWorldLocation);
+								const float TargetDist = Conn.TargetRoad->GetDistanceAlongSplineAtSplineInputKey(TargetKey);
+
+								CurrentRoadSpline = Conn.TargetRoad;
+								DistanceAlongSpline = TargetDist;
+								CurrentLaneIndex = NewLane;
+								TargetLaneOffsetCm = Conn.TargetRoad->GetLaneCenterOffset(NewLane);
+								bIsChangingLanes = true;
+								LaneChangeProgress = 0.0f;
+								LaneChangeDuration = FMath::Clamp(TransitionLen / FMath::Max(100.0f, CurrentSpeedCmS), 1.5f, 3.5f);
+								bTransitioned = true;
+								break;
+							}
+						}
+						if (bTransitioned)
+						{
+							break;
+						}
+					}
+				}
+			}
+
+			if (!bTransitioned)
+			{
+				DistanceAlongSpline = FMath::Fmod(DistanceAlongSpline, SplineTotalLength);
+			}
 		}
 
 		const FVector SplinePos = CurrentRoadSpline->GetLocationAtDistanceAlongSpline(DistanceAlongSpline, ESplineCoordinateSpace::World);

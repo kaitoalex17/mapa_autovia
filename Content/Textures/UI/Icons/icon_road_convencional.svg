@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Calzada Convencional 90 km/h -->
+  <rect x="14" y="6" width="36" height="52" rx="4" fill="#1e293b" stroke="#64748b" stroke-width="2"/>
+  <!-- Lineas blancas de borde -->
+  <line x1="18" y1="6" x2="18" y2="58" stroke="#f8fafc" stroke-width="2"/>
+  <line x1="46" y1="6" x2="46" y2="58" stroke="#f8fafc" stroke-width="2"/>
+  <!-- Eje central discontinuo -->
+  <line x1="32" y1="10" x2="32" y2="20" stroke="#f8fafc" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="32" y1="28" x2="32" y2="38" stroke="#f8fafc" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="32" y1="46" x2="32" y2="56" stroke="#f8fafc" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Flechas bidireccionales -->
+  <path d="M25 40 L25 24 M22 28 L25 24 L28 28" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M39 24 L39 40 M36 36 L39 40 L42 36" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

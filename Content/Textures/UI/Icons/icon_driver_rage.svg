@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Estado Conductor: Furia al Volante (Alerta Maxima) -->
+  <circle cx="32" cy="32" r="26" fill="#7f1d1d" stroke="#ef4444" stroke-width="2.5"/>
+  <polygon points="32,14 50,46 14,46" fill="#b91c1c" stroke="#f87171" stroke-width="2"/>
+  <line x1="32" y1="24" x2="32" y2="36" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="32" cy="41" r="2" fill="#ffffff"/>
+</svg>

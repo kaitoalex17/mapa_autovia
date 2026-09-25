@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Ramal de Enlace e Incorporacion Tangencial -->
+  <path d="M16 6 L16 58" stroke="#475569" stroke-width="12" stroke-linecap="round"/>
+  <path d="M16 6 L16 58" stroke="#0f172a" stroke-width="8"/>
+  <path d="M50 56 C46 36, 32 28, 16 22" stroke="#475569" stroke-width="10" stroke-linecap="round"/>
+  <path d="M50 56 C46 36, 32 28, 16 22" stroke="#1e293b" stroke-width="6"/>
+  <!-- Cuña de aceleracion de pintura blanca -->
+  <path d="M18 20 L24 23 L20 28 Z" fill="#ffffff"/>
+  <path d="M46 50 L42 42 L38 46 Z" fill="#00c0f3"/>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Viaducto Elevado sobre Pilares de Hormigon -->
+  <path d="M6 46 C16 46, 20 54, 32 54 C44 54, 48 46, 58 46" stroke="#0369a1" stroke-width="3" fill="none"/>
+  <!-- Pilares estructurales -->
+  <rect x="18" y="24" width="6" height="30" fill="#94a3b8" rx="1"/>
+  <rect x="40" y="24" width="6" height="30" fill="#94a3b8" rx="1"/>
+  <line x1="16" y1="54" x2="26" y2="54" stroke="#475569" stroke-width="3"/>
+  <line x1="38" y1="54" x2="48" y2="54" stroke="#475569" stroke-width="3"/>
+  <!-- Tablero del viaducto -->
+  <rect x="6" y="20" width="52" height="7" rx="2" fill="#cbd5e1" stroke="#475569" stroke-width="1.5"/>
+  <!-- Quitamiedos superior -->
+  <line x1="6" y1="16" x2="58" y2="16" stroke="#38bdf8" stroke-width="2"/>
+</svg>

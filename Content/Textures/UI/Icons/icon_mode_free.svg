@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Modo Curva Bezier / Spline Suave -->
+  <path d="M10 48 C20 16, 44 16, 54 48" stroke="#38bdf8" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <!-- Tangentes de control Bezier -->
+  <line x1="10" y1="48" x2="22" y2="16" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <line x1="54" y1="48" x2="42" y2="16" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <circle cx="10" cy="48" r="4" fill="#0284c7" stroke="#ffffff" stroke-width="1.5"/>
+  <circle cx="54" cy="48" r="4" fill="#0284c7" stroke="#ffffff" stroke-width="1.5"/>
+  <rect x="19" y="13" width="6" height="6" fill="#f59e0b" stroke="#ffffff" stroke-width="1"/>
+  <rect x="39" y="13" width="6" height="6" fill="#f59e0b" stroke="#ffffff" stroke-width="1"/>
+</svg>
