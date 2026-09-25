@@ -1,0 +1,66 @@
+# Material Library para SM_Radar_Fijo_DGT
+# Autopistas de España - Unreal Engine 5 PBR Materials
+
+newmtl M_Concrete
+# Hormigón estándar para cimentaciones y zapatas de pórticos y radares
+Ka 0.1800 0.1800 0.1800
+Kd 0.5200 0.5200 0.5000
+Ks 0.1000 0.1000 0.1000
+Ns 8.0
+d 1.00
+illum 2
+
+newmtl M_Marker_Black
+# Banda negra superior de contraste para hito de arista
+Ka 0.0300 0.0300 0.0300
+Kd 0.0800 0.0800 0.0900
+Ks 0.1500 0.1500 0.1500
+Ns 20.0
+d 1.00
+illum 2
+
+newmtl M_Radar_Housing_Gray
+# Cabina metálica cinemómetro DGT en gris intemperie
+Ka 0.1800 0.1900 0.2000
+Kd 0.5200 0.5400 0.5600
+Ks 0.3000 0.3000 0.3200
+Ns 30.0
+d 1.00
+illum 2
+
+newmtl M_Radar_Lens
+# Vidrio óptico multicapa oscuro para cámara fotográfica y sensor cinemómetro
+Ka 0.0200 0.0200 0.0300
+Kd 0.0500 0.0600 0.0800
+Ks 0.9500 0.9500 0.9800
+Ns 180.0
+d 0.95
+illum 2
+
+newmtl M_Radar_Orange_DGT
+# Franjas de peligro y alta visibilidad naranja DGT para cabina de radar
+Ka 0.3000 0.1200 0.0000
+Kd 0.9600 0.4600 0.0200
+Ks 0.5000 0.3000 0.1000
+Ns 40.0
+d 1.00
+illum 2
+
+newmtl M_Radar_Sensor
+# Óptica secundaria de flash infrarrojo estroboscópico / antena radar Doppler
+Ka 0.0400 0.0400 0.0500
+Kd 0.1600 0.1700 0.1900
+Ks 0.6000 0.6000 0.6500
+Ns 70.0
+d 1.00
+illum 2
+
+newmtl M_Steel_Galvanized
+# Acero galvanizado en caliente para biondas, postes y pórticos
+Ka 0.2400 0.2500 0.2600
+Kd 0.6800 0.7000 0.7300
+Ks 0.8000 0.8200 0.8500
+Ns 75.0
+d 1.00
+illum 2
+

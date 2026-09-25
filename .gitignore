@@ -1,0 +1,26 @@
+# Visual Studio / VS Code
+.vs/
+.vscode/
+*.sln
+*.suo
+*.user
+*.useroscl
+*.sln.docstates
+*.opensdf
+*.sdf
+
+# Unreal Engine Generated & Temporary Folders
+Binaries/
+Build/
+DerivedDataCache/
+Intermediate/
+Saved/
+.idea/
+
+# Logs and Crash Dumps
+*.log
+*.dmp
+
+# OS System Files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,48 @@
+# Material Library para SM_Mojon_Kilometrico
+# Autopistas de España - Unreal Engine 5 PBR Materials
+
+newmtl M_Concrete
+# Hormigón estándar para cimentaciones y zapatas de pórticos y radares
+Ka 0.1800 0.1800 0.1800
+Kd 0.5200 0.5200 0.5000
+Ks 0.1000 0.1000 0.1000
+Ns 8.0
+d 1.00
+illum 2
+
+newmtl M_Marker_Black
+# Banda negra superior de contraste para hito de arista
+Ka 0.0300 0.0300 0.0300
+Kd 0.0800 0.0800 0.0900
+Ks 0.1500 0.1500 0.1500
+Ns 20.0
+d 1.00
+illum 2
+
+newmtl M_Mojon_Blue
+# Fondo azul autovía para mojón de punto kilométrico (PK)
+Ka 0.0000 0.1200 0.2500
+Kd 0.0000 0.3000 0.5800
+Ks 0.3000 0.3000 0.3500
+Ns 40.0
+d 1.00
+illum 2
+
+newmtl M_Mojon_White
+# Cuerpo y textos blancos de mojón kilométrico
+Ka 0.2500 0.2500 0.2500
+Kd 0.8800 0.8800 0.9000
+Ks 0.2500 0.2500 0.2800
+Ns 25.0
+d 1.00
+illum 2
+
+newmtl M_Reflector_Amber
+# Captafaro retrorreflectante ámbar / amarillo margen izquierdo
+Ka 0.3000 0.1800 0.0200
+Kd 0.9800 0.6500 0.0500
+Ks 0.9000 0.7000 0.2000
+Ns 128.0
+d 1.00
+illum 2
+

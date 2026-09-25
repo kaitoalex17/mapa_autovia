@@ -1,0 +1,21 @@
+# Material Library para SM_Bionda_Simple_400
+# Autopistas de España - Unreal Engine 5 PBR Materials
+
+newmtl M_Reflector_White
+# Captafaro retrorreflectante blanco / ojo de gato para biondas e hitos
+Ka 0.3000 0.3000 0.3000
+Kd 0.9500 0.9500 0.9500
+Ks 0.9000 0.9000 0.9000
+Ns 128.0
+d 1.00
+illum 2
+
+newmtl M_Steel_Galvanized
+# Acero galvanizado en caliente para biondas, postes y pórticos
+Ka 0.2400 0.2500 0.2600
+Kd 0.6800 0.7000 0.7300
+Ks 0.8000 0.8200 0.8500
+Ns 75.0
+d 1.00
+illum 2
+

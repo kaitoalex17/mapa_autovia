@@ -1,0 +1,30 @@
+# Material Library para SM_Hito_Arista
+# Autopistas de España - Unreal Engine 5 PBR Materials
+
+newmtl M_Marker_Black
+# Banda negra superior de contraste para hito de arista
+Ka 0.0300 0.0300 0.0300
+Kd 0.0800 0.0800 0.0900
+Ks 0.1500 0.1500 0.1500
+Ns 20.0
+d 1.00
+illum 2
+
+newmtl M_Marker_White
+# Polímero blanco estabilizado anti-UV para cuerpo de hito de arista DGT
+Ka 0.2500 0.2500 0.2500
+Kd 0.9200 0.9200 0.9300
+Ks 0.3000 0.3000 0.3200
+Ns 30.0
+d 1.00
+illum 2
+
+newmtl M_Reflector_White
+# Captafaro retrorreflectante blanco / ojo de gato para biondas e hitos
+Ka 0.3000 0.3000 0.3000
+Kd 0.9500 0.9500 0.9500
+Ks 0.9000 0.9000 0.9000
+Ns 128.0
+d 1.00
+illum 2
+

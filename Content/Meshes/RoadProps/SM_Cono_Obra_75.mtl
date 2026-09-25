@@ -1,0 +1,30 @@
+# Material Library para SM_Cono_Obra_75
+# Autopistas de España - Unreal Engine 5 PBR Materials
+
+newmtl M_Cone_Base_Black
+# Caucho negro vulcanizado de alta densidad para base de cono
+Ka 0.0500 0.0500 0.0500
+Kd 0.1200 0.1200 0.1300
+Ks 0.1500 0.1500 0.1500
+Ns 15.0
+d 1.00
+illum 2
+
+newmtl M_Reflective_White
+# Lámina retrorreflectante blanca microprismática Clase 3
+Ka 0.3000 0.3000 0.3000
+Kd 0.9600 0.9600 0.9600
+Ks 0.9200 0.9200 0.9500
+Ns 120.0
+d 1.00
+illum 2
+
+newmtl M_TrafficCone_Orange
+# Naranja fluorescente alta visibilidad DGT / UNE-EN 13422
+Ka 0.3500 0.0800 0.0000
+Kd 0.9800 0.3200 0.0200
+Ks 0.4500 0.2000 0.1000
+Ns 35.0
+d 1.00
+illum 2
+

@@ -1,0 +1,48 @@
+# Material Library para SM_Cartel_Salida_Inmediata
+# Autopistas de España - Unreal Engine 5 PBR Materials
+
+newmtl M_Concrete
+# Hormigón estándar para cimentaciones y zapatas de pórticos y radares
+Ka 0.1800 0.1800 0.1800
+Kd 0.5200 0.5200 0.5000
+Ks 0.1000 0.1000 0.1000
+Ns 8.0
+d 1.00
+illum 2
+
+newmtl M_Sign_Back_Gray
+# Chapa trasera galvanizada mate con imprimación gris anticorrosión
+Ka 0.1800 0.1800 0.1900
+Kd 0.4500 0.4600 0.4800
+Ks 0.2800 0.2800 0.3000
+Ns 25.0
+d 1.00
+illum 2
+
+newmtl M_Sign_Blue_RAL5017
+# Azul señales de autovía y autopista según Norma 8.1-IC (RAL 5017 Azul Tráfico)
+Ka 0.0000 0.1200 0.2400
+Kd 0.0000 0.2900 0.5500
+Ks 0.3500 0.3500 0.4000
+Ns 45.0
+d 1.00
+illum 2
+
+newmtl M_Sign_White_Reflective
+# Blanco reflectante de orlas, flechas a 45º y pictogramas viales
+Ka 0.3000 0.3000 0.3000
+Kd 0.9700 0.9700 0.9700
+Ks 0.9000 0.9000 0.9000
+Ns 110.0
+d 1.00
+illum 2
+
+newmtl M_Steel_Galvanized
+# Acero galvanizado en caliente para biondas, postes y pórticos
+Ka 0.2400 0.2500 0.2600
+Kd 0.6800 0.7000 0.7300
+Ks 0.8000 0.8200 0.8500
+Ns 75.0
+d 1.00
+illum 2
+

@@ -1,0 +1,158 @@
+# Autopistas de España - Biblioteca Maestra de Materiales
+
+newmtl M_CarPaint_Red
+  Ka 0.15 0.02 0.02
+  Kd 0.75 0.06 0.06
+  Ks 0.85 0.85 0.85
+  Ns 120.0
+  d 1.0
+  illum 2
+
+newmtl M_CarPaint_White
+  Ka 0.20 0.20 0.20
+  Kd 0.92 0.93 0.95
+  Ks 0.80 0.80 0.80
+  Ns 100.0
+  d 1.0
+  illum 2
+
+newmtl M_CarPaint_Blue
+  Ka 0.02 0.05 0.15
+  Kd 0.08 0.25 0.70
+  Ks 0.80 0.80 0.80
+  Ns 110.0
+  d 1.0
+  illum 2
+
+newmtl M_CarPaint_DarkGrey
+  Ka 0.05 0.05 0.05
+  Kd 0.22 0.23 0.25
+  Ks 0.70 0.70 0.70
+  Ns 90.0
+  d 1.0
+  illum 2
+
+newmtl M_CarPaint_GC_Green
+  Ka 0.00 0.08 0.05
+  Kd 0.00 0.337 0.231
+  Ks 0.75 0.75 0.75
+  Ns 100.0
+  d 1.0
+  illum 2
+
+newmtl M_GC_Yellow
+  Ka 0.25 0.25 0.02
+  Kd 0.88 0.92 0.08
+  Ks 0.60 0.60 0.60
+  Ns 80.0
+  d 1.0
+  illum 2
+
+newmtl M_CarPaint_Yellow_Tow
+  Ka 0.25 0.18 0.01
+  Kd 0.95 0.68 0.05
+  Ks 0.75 0.75 0.75
+  Ns 95.0
+  d 1.0
+  illum 2
+
+newmtl M_CarPaint_Bus
+  Ka 0.02 0.08 0.15
+  Kd 0.06 0.42 0.72
+  Ks 0.85 0.85 0.85
+  Ns 110.0
+  d 1.0
+  illum 2
+
+newmtl M_Trailer_White
+  Ka 0.15 0.15 0.15
+  Kd 0.86 0.87 0.89
+  Ks 0.50 0.50 0.50
+  Ns 60.0
+  d 1.0
+  illum 2
+
+newmtl M_Glass
+  Ka 0.05 0.08 0.12
+  Kd 0.15 0.22 0.30
+  Ks 0.95 0.95 0.95
+  Ns 150.0
+  d 0.55
+  illum 2
+
+newmtl M_Plastic_Black
+  Ka 0.04 0.04 0.04
+  Kd 0.12 0.12 0.12
+  Ks 0.20 0.20 0.20
+  Ns 30.0
+  d 1.0
+  illum 2
+
+newmtl M_Rubber_Tire
+  Ka 0.02 0.02 0.02
+  Kd 0.08 0.08 0.08
+  Ks 0.10 0.10 0.10
+  Ns 15.0
+  d 1.0
+  illum 2
+
+newmtl M_Rim_Silver
+  Ka 0.20 0.20 0.20
+  Kd 0.80 0.82 0.85
+  Ks 0.90 0.90 0.90
+  Ns 130.0
+  d 1.0
+  illum 2
+
+newmtl M_Chrome_Metal
+  Ka 0.30 0.30 0.30
+  Kd 0.90 0.90 0.92
+  Ks 0.98 0.98 0.98
+  Ns 160.0
+  d 1.0
+  illum 2
+
+newmtl M_Diamond_Plate
+  Ka 0.15 0.15 0.15
+  Kd 0.55 0.56 0.58
+  Ks 0.75 0.75 0.75
+  Ns 85.0
+  d 1.0
+  illum 2
+
+newmtl M_Lights_Front
+  Ka 0.30 0.30 0.30
+  Kd 0.95 0.95 0.90
+  Ks 1.00 1.00 1.00
+  Ke 1.00 0.98 0.85
+  Ns 140.0
+  d 1.0
+  illum 2
+
+newmtl M_Lights_Rear
+  Ka 0.20 0.02 0.02
+  Kd 0.85 0.05 0.05
+  Ks 0.90 0.50 0.50
+  Ke 0.95 0.05 0.05
+  Ns 120.0
+  d 1.0
+  illum 2
+
+newmtl M_Lights_Beacon_Blue
+  Ka 0.02 0.15 0.40
+  Kd 0.05 0.45 1.00
+  Ks 1.00 1.00 1.00
+  Ke 0.10 0.65 1.00
+  Ns 160.0
+  d 0.85
+  illum 2
+
+newmtl M_Lights_Beacon_Amber
+  Ka 0.30 0.15 0.01
+  Kd 1.00 0.65 0.02
+  Ks 0.95 0.95 0.95
+  Ke 1.00 0.68 0.00
+  Ns 150.0
+  d 0.85
+  illum 2
+
