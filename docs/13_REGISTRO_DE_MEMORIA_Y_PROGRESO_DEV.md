@@ -23,6 +23,7 @@ Este documento actúa como la **memoria técnica persistente** del proyecto para
 | **Localización Bilingüe** | `ULocalizationSubsystem` | ✅ Completado | Traducción en tiempo real sin reinicio (Español / Inglés). |
 | **Modelos 3D de Vehículos**| 23 archivos `.obj` y `.mtl` en `Content/Meshes/Vehicles/` | ✅ Completado | 7 arquetipos oficiales + piezas desprendibles a escala $1\text{ UU} = 1\text{ cm}$. |
 | **Props Viales Españoles**| 9 archivos `.obj` y `.mtl` en `Content/Meshes/RoadProps/` | ✅ Completado | Biondas SPM (UNE-EN 1317), New Jersey, radar DGT, pórticos y conos. |
+| **Operativos DGT y Pegasus** | `UDGTControlSubsystem`, `APegasusHelicopterActor`, `DGTTypes.h` | ✅ Completado | Cota cenital 300m, patrulla, cinemómetro láser, >150 km/h, acoso trasero, controles calzada, balizamiento conos y reducción siniestralidad. |
 | **Arte de la UI** | `MainMenu_DGT_Background.jpg` en `Content/Textures/UI/` | ✅ Completado | Plano del Centro de Control de Tráfico DGT en alta resolución. |
 | **Repositorio Git Remoto**| GitHub `kaitoalex17/mapa_autovia.git` | ✅ Sincronizado | Rama `main` actualizada con todos los módulos. |
 

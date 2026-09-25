@@ -36,6 +36,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Road Network")
 	float GetTotalNetworkLengthKm() const;
 
+	// Obtener lista de tramos registrados en la red
+	const TArray<TWeakObjectPtr<URoadSplineComponent>>& GetRegisteredRoads() const { return RegisteredRoads; }
+
 private:
 	UPROPERTY()
 	TArray<TWeakObjectPtr<URoadSplineComponent>> RegisteredRoads;

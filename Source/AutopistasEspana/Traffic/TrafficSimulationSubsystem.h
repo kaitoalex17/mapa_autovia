@@ -51,6 +51,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Traffic Metrics")
 	float GetCongestionPercentage() const;
 
+	// Obtener lista de vehiculos activos en la simulacion
+	const TArray<TWeakObjectPtr<ATrafficVehicleAgent>>& GetActiveVehicles() const { return ActiveVehicles; }
+
 private:
 	UPROPERTY()
 	TArray<TWeakObjectPtr<ATrafficVehicleAgent>> ActiveVehicles;

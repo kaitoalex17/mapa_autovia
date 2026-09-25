@@ -26,6 +26,7 @@
 12. **[11. Diseño de la Interfaz Gráfica (HUD, Menús y UX)](file:///C:/app/game_autopista/docs/11_DISENO_INTERFAZ_GRAFICA_HUD_Y_UX.md)**: Barra superior de finanzas y siniestralidad, dock inferior de herramientas viales, paleta de colores oficial de carreteras españolas y notificaciones Toast del 112.
 13. **[12. Sistema de Localización Bilingüe (Español / Inglés)](file:///C:/app/game_autopista/docs/12_SISTEMA_LOCALIZACION_BILINGUE_ES_EN.md)**: Subsistema de internacionalización en tiempo real con tabla de cadenas y soporte multilingüe.
 14. **[13. Registro de Memoria y Progreso de Desarrollo (Dev Log)](file:///C:/app/game_autopista/docs/13_REGISTRO_DE_MEMORIA_Y_PROGRESO_DEV.md)**: Memoria persistente técnica con la matriz de estado de todos los módulos y decisiones de diseño.
+15. **[14. Sistema Ferroviario, Pasos a Nivel y Autopista Ferroviaria](file:///C:/app/game_autopista/docs/14_SISTEMA_FERROVIARIO_Y_PASOS_A_NIVEL.md)**: Spline con balasto y vías UIC 60, pasos a nivel Clase C (SLA) con semibarreras y focos rojos, y trenes para descongestión modal de autovías.
 
 ---
 
