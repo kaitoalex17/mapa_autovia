@@ -753,3 +753,198 @@ input:checked + .slider:before {
   color: #38bdf8;
   font-family: monospace;
 }
+
+/* ==========================================================================
+   TARJETA FLOTANTE DE INSPECCIÓN DE VEHÍCULO
+   ========================================================================== */
+.inspector-card {
+  position: absolute;
+  bottom: 100px;
+  right: 20px;
+  z-index: 15;
+  width: 310px;
+  background: var(--bg-hud);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-hud);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 192, 243, 0.2);
+  animation: card-appear 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.inspector-card.hidden {
+  display: none !important;
+}
+
+@keyframes card-appear {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.inspector-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 8px;
+}
+
+.inspector-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.inspector-icon {
+  font-size: 26px;
+  background: rgba(0, 160, 227, 0.15);
+  border-radius: 10px;
+  padding: 4px 8px;
+  border: 1px solid rgba(0, 192, 243, 0.3);
+}
+
+.inspector-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.inspector-plate {
+  font-size: 10px;
+  font-family: monospace;
+  background: #ffffff;
+  color: #111;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 3px;
+  display: inline-block;
+  margin-top: 2px;
+  border-left: 3px solid #004b87;
+}
+
+.inspector-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.inspector-close:hover {
+  color: #fff;
+}
+
+.inspector-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.insp-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.insp-label {
+  color: var(--text-muted);
+}
+
+.insp-value {
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.insp-value.highlight {
+  color: #38bdf8;
+  font-size: 13px;
+}
+
+.insp-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.insp-progress-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.insp-progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+.insp-progress-pct {
+  font-weight: 700;
+  color: #f59e0b;
+}
+
+.insp-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.insp-progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444);
+  transition: width 0.2s ease;
+}
+
+.inspector-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.insp-act-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.insp-act-btn.fine {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.insp-act-btn.fine:hover {
+  background: rgba(239, 68, 68, 0.4);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
+}
+
+.insp-act-btn.tow {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fde68a;
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+.insp-act-btn.tow:hover {
+  background: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+}
+

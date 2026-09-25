@@ -209,26 +209,113 @@
       <span class="dock-name" data-i18n="TOOL_AUTOVIA">Autovía 2x2</span>
     </button>
 
-    <button class="dock-btn" id="tool-enlace" data-tool="enlace">
+    <button class="dock-btn" id="tool-autovia-3x3" data-tool="autovia_3x3">
       <span class="dock-key">3</span>
+      <span class="dock-icon">🛣️</span>
+      <span class="dock-name" data-i18n="TOOL_AUTOVIA_3X3">Autopista 3x3</span>
+    </button>
+
+    <button class="dock-btn" id="tool-enlace" data-tool="enlace">
+      <span class="dock-key">4</span>
       <span class="dock-icon">↗️</span>
       <span class="dock-name" data-i18n="TOOL_ENLACE">Enlace / Ramal</span>
     </button>
 
     <div class="dock-divider"></div>
 
-    <button class="dock-btn" id="tool-police-check" data-tool="police_check">
-      <span class="dock-key">4</span>
-      <span class="dock-icon">🚓</span>
-      <span class="dock-name" data-i18n="TOOL_POLICE">Control Guardia Civil</span>
+    <button class="dock-btn" id="tool-toll" data-tool="toll">
+      <span class="dock-key">5</span>
+      <span class="dock-icon">💳</span>
+      <span class="dock-name" data-i18n="TOOL_TOLL">Peaje Troncal</span>
     </button>
 
+    <button class="dock-btn" id="tool-railway" data-tool="railway">
+      <span class="dock-key">6</span>
+      <span class="dock-icon">🚆</span>
+      <span class="dock-name" data-i18n="TOOL_RAILWAY">Paso a Nivel</span>
+    </button>
+
+    <button class="dock-btn" id="tool-tow-truck" data-tool="tow_truck">
+      <span class="dock-key">7</span>
+      <span class="dock-icon">🚚</span>
+      <span class="dock-name" data-i18n="TOOL_TOW">Grúa 112</span>
+    </button>
+
+    <button class="dock-btn" id="tool-police-check" data-tool="police_check">
+      <span class="dock-key">8</span>
+      <span class="dock-icon">🚓</span>
+      <span class="dock-name" data-i18n="TOOL_POLICE">Control DGT</span>
+    </button>
+
+    <div class="dock-divider"></div>
+
     <button class="dock-btn" id="tool-demolish" data-tool="demolish">
-      <span class="dock-key">5</span>
+      <span class="dock-key">9</span>
       <span class="dock-icon">🚜</span>
       <span class="dock-name" data-i18n="TOOL_DEMOLISH">Demoler</span>
     </button>
   </nav>
+
+  <!-- TARJETA FLOTANTE DE INSPECCIÓN DE VEHÍCULO Y CONDUCTOR -->
+  <div id="vehicle-inspector" class="inspector-card hidden">
+    <div class="inspector-header">
+      <div class="inspector-title-wrap">
+        <span class="inspector-icon" id="insp-icon">🚗</span>
+        <div>
+          <div class="inspector-title" id="insp-type">Turismo Compacto</div>
+          <div class="inspector-plate" id="insp-plate">1234-DGT</div>
+        </div>
+      </div>
+      <button class="inspector-close" id="btn-close-inspector">&times;</button>
+    </div>
+
+    <div class="inspector-body">
+      <!-- Velocímetro -->
+      <div class="insp-stat-row">
+        <span class="insp-label" data-i18n="INSPECT_SPEED">Velocidad</span>
+        <span class="insp-value highlight" id="insp-speed">118 km/h <span class="insp-sub" id="insp-limit">/ 120</span></span>
+      </div>
+
+      <!-- Estado Psicológico y Humor -->
+      <div class="insp-stat-row">
+        <span class="insp-label" data-i18n="INSPECT_MOOD">Humor Conductor</span>
+        <span class="insp-value" id="insp-mood"><span id="insp-mood-emoji">🙂</span> <span id="insp-mood-text">Tranquilo</span></span>
+      </div>
+
+      <!-- Barra de Frustración / Estrés -->
+      <div class="insp-progress-wrap">
+        <div class="insp-progress-header">
+          <span class="insp-label" data-i18n="INSPECT_FRUSTRATION">Nivel de Frustración</span>
+          <span class="insp-progress-pct" id="insp-frustration-val">15%</span>
+        </div>
+        <div class="insp-progress-bar">
+          <div class="insp-progress-fill" id="insp-frustration-fill" style="width: 15%;"></div>
+        </div>
+      </div>
+
+      <!-- Tiempo en Retención -->
+      <div class="insp-stat-row">
+        <span class="insp-label" data-i18n="INSPECT_JAM_TIME">Tiempo en Atasco</span>
+        <span class="insp-value" id="insp-jam-time">0.0 s</span>
+      </div>
+
+      <!-- Estado Mecánico / Incidencia -->
+      <div class="insp-stat-row">
+        <span class="insp-label" data-i18n="INSPECT_STATUS">Estado</span>
+        <span class="insp-value" id="insp-incident-status">Circulando</span>
+      </div>
+    </div>
+
+    <!-- Acciones Tácticas del Jugador -->
+    <div class="inspector-actions">
+      <button class="insp-act-btn fine" id="btn-insp-fine">
+        <span>⚡</span> <span data-i18n="INSPECT_ACTION_FINE">Sancionar DGT (200 €)</span>
+      </button>
+      <button class="insp-act-btn tow" id="btn-insp-tow">
+        <span>🚚</span> <span data-i18n="INSPECT_ACTION_TOW">Enviar Grúa 112</span>
+      </button>
+    </div>
+  </div>
 
   <!-- CONTROLES FLOTANTES DE CÁMARA -->
   <div id="camera-controls">

@@ -34,95 +34,48 @@ El simulador cuenta con una cámara cenital/isométrica fluida con amortiguació
 
 Puedes ampliar la red vial trazando nuevas vías que se integran dinámicamente:
 
-1. **Selecciona un tipo de vía en el Dock Inferior:**
-   - `🛣️ Carretera 90 (Tecla 1)`: Vía convencional de 1 carril por sentido (límite $90\text{ km/h}$).
-   - `🛤️ Autovía 2x2 (Tecla 2)`: Doble calzada separada por mediana con guardarraíles bionda de acero (límite $120\text{ km/h}$).
-   - `↗️ Enlace / Ramal (Tecla 3)`: Vía de 1 carril para incorporaciones o salidas (límite $80\text{ km/h}$).
-2. **Trazar en el mapa:** Haz **clic izquierdo** en el punto inicial, **arrastra** hacia el destino deseado y **suelta**. El trazador calculará automáticamente una curva Bézier suave, respetando la continuidad del trazado.
-3. **Mecánica de Obras en Vivo (5 segundos):**
-   - Con el toggle `Obras en Vivo (5s)` activado en el panel izquierdo, el tramo recién construido se baliza con **conos reflectantes de obra**, cartel indicador y obreros.
-   - Durante esos 5 segundos el tramo no admite tráfico hasta que concluye el asfaltado. Una vez finalizado, suena un aviso acústico y queda inaugurado.
+### 3.1. Catálogo Completo de Vías e Infraestructuras en el Dock:
+1. `🛣️ Carretera 90 (Tecla 1)`: Vía convencional de 1 carril por sentido (límite $90\text{ km/h}$).
+2. `🛤️ Autovía 2x2 (Tecla 2)`: Doble calzada con mediana y biondas bivalva metálicas (límite $120\text{ km/h}$).
+3. `🛣️ Autopista 3x3 (Tecla 3)`: Vía de gran capacidad de 3 carriles por sentido para tramos de alta demanda tipo M-40 / A-4 (límite $120\text{ km/h}$).
+4. `↗️ Enlace / Ramal (Tecla 4)`: Vía de 1 carril para incorporaciones y trenzados (límite $80\text{ km/h}$).
+5. `💳 Peaje Troncal (Tecla 5)`: Estación de peaje con marquesina azul. Cada coche que cruza se detiene brevemente y abona **+3.50 €** que suma a tu presupuesto.
+6. `🚆 Paso a Nivel ADIF (Tecla 6)`: Cruce viario con vía férrea. Cada 18 segundos se aproximan trenes de mercancías; las semibarreras rojas y blancas bajan, las luces parpadean y el tráfico se detiene en seco hasta que pasa el convoy.
+7. `🚚 Grúa 112 (Tecla 7)`: Despacha una grúa de asistencia en carretera para retirar vehículos averiados, colisionados o bloqueados, despejando el carril.
+8. `🚓 Control DGT (Tecla 8)`: Despliega una patrulla de la Guardia Civil y conos reflectantes para canalizar el tráfico a 40 km/h.
+9. `🚜 Demoler (Tecla 9)`: Elimina tramos obsoletos o mal trazados.
 
 ---
 
-## 🚗 Paso 4: Simulación de Tráfico, Flota y Físicas IDM/MOBIL
+## 🔍 Paso 4: Ficha de Inspección de Vehículo y Psicología en Vivo (`Tecla Q`)
 
-El simulador implementa los modelos científicos oficiales de tráfico:
-- **IDM (Intelligent Driver Model):** Los vehículos aceleran suavemente hacia su velocidad deseada, guardan la distancia de seguridad prescrita ($s_0$ y $T$) y frenan progresivamente ante obstáculos.
-- **MOBIL (Lane Changing):** En la Autovía 2x2, los coches evalúan si circular por la izquierda para adelantar a un vehículo pesado y **vuelven inmediatamente a la derecha** cuando está libre (norma de la DGT española).
-- **Tipología de Vehículos:**
-  - 🚗 **Turismos compactos:** Ágiles, con velocidades deseadas entre $110$ y $135\text{ km/h}$.
-  - 🚛 **Camiones articulados (Tráilers):** Gran masa, aceleración pausada y velocidad máxima restringida a $90\text{ km/h}$.
-  - 🚐 **Furgonetas de reparto:** Circulación a $105\text{ km/h}$.
-  - 🚓 **Patrullas de la Guardia Civil:** Decoradas con la librea oficial verde y blanca, con rotativos azules estroboscópicos en el techo.
+Al seleccionar la herramienta **🔍 Inspeccionar** y hacer clic sobre cualquier vehículo en circulación, se abrirá la **Tarjeta de Inspección de la DGT**:
+- **Ficha Técnica:** Modelo exacto (Turismo, Camión, Furgoneta, Guardia Civil), matrícula oficial y velocímetro en tiempo real frente al límite de la vía.
+- **Termómetro de Estrés:** Barra de frustración del conductor ($0 - 100\%$) y tiempo acumulado en atasco.
+- **Acciones Tácticas Directas del Jugador:**
+  - `⚡ Sancionar DGT (200 €)`: Emite un boletín electrónico inmediato que calma al conductor rebelde e ingresa 200 € en tus arcas.
+  - `🚚 Enviar Grúa 112`: Envía una grúa de plataforma para remolcar el vehículo si está provocando retención.
 
 ---
 
-## 🚨 Paso 5: Provocar Atascos y Observar la Psicología del Conductor
-
-Para verificar cómo reaccionan los conductores ante imprevistos:
-
-1. Haz clic en el botón rojo **`🚨 Provocar Retención / Conos`** en el panel lateral izquierdo.
-2. Se colocará un obstáculo de mantenimiento en uno de los carriles principales de la autovía.
-3. **Efecto Embudo en Cadena:**
-   - Los coches que se aproximan clavan frenos, provocando la onda de frenado en acordeón típica de los atascos fantasma.
-   - Observa cómo sube el indicador de **Congestión Global** en el HUD superior.
-4. **Evolución del Humor y Furia al Volante (*Road Rage*):**
-   - Cada conductor tiene un medidor individual de frustración ($0 - 100\%$).
-   - `🙂 Zen (0 - 30%)`: Circulación tranquila.
-   - `😐 Impaciente (30 - 70%)`: El conductor pega el coche al parachoques delantero y busca huecos ansiosamente.
-   - `😡 Furia al Volante (> 70%)`: Se activa el icono de enfado, el conductor **toca la bocina (bocinazo audible sintetizado)**, da ráfagas y realiza maniobras temerarias.
-5. Puedes pulsar de nuevo el botón para retirar los conos y ver cómo la vía recupera la fluidez.
-
----
-
-## 🚁 Paso 6: Vigilancia Aérea con el Helicóptero Radar Pegasus
-
-En el cielo de la autovía patrulla el helicóptero radar **Pegasus MX-15** de la DGT:
-
-1. **Haz de Radar Láser:** Proyecta un cono cian sobre la calzada con anillos de pulso concéntrico.
-2. **Detección Automática de Infractores:**
-   - Escanea la velocidad de todos los vehículos que atraviesan el cono.
-   - Si un turismo circula a más de $120\text{ km/h}$ o un conductor furioso realiza acoso pegado al parachoques, el radar fija la mira (**RADAR LOCK en rojo**).
-3. **Emisión de Multa Electrónica:**
-   - Tras 1.2 segundos de confirmación, emite un sonido de caja registradora / captura fotográfica.
-   - Aparece un texto flotante verde sobre el coche infractor (`+300 €` o `+600 €`).
-   - El dinero se ingresa inmediatamente en tu **Presupuesto Municipal (€)** y se anota en el panel derecho `DGT PEGASUS MX-15`.
-
----
-
-## 🌦️ Paso 7: Toggles y Modificadores en Tiempo Real
-
-En el panel lateral izquierdo puedes activar o desactivar los subsistemas al vuelo:
-- **`Obras en Vivo (5s)`**: Alterna entre construcción instantánea o realista con conos.
-- **`Psicología y Furia`**: Activa o silencia el sistema de estrés, emoticonos y bocinas de los conductores.
-- **`Patrulla Pegasus`**: Envía al helicóptero a la base o lo mantiene patrullando la red.
-- **`Clima DANA Lluvia`**: Despliega una tormenta con cortina de lluvia diagonal, oscurece el asfalto simulando calzada mojada y **reduce el coeficiente de adherencia de los frenos a un 65%**, aumentando el riesgo de alcances traseros.
-
----
-
-## 🌐 Paso 8: Selector de Idioma (Español / English)
-
-En la barra superior derecha encontrarás el botón **`🇪🇸 ES`**:
-- Al hacer clic, cambiará instantáneamente a **`🇬🇧 EN`**.
-- Todos los textos, botones, avisos 112, registros de multas de Pegasus y menús de ayuda se traducirán en tiempo real sin recargar la página ni perder el estado de la simulación.
-
----
-
-## ⌨️ Resumen de Atajos de Teclado
+## ⌨️ Resumen Completo de Atajos de Teclado
 
 | Tecla | Función |
 | :--- | :--- |
-| `Q` | Herramienta de Inspección de Vehículos |
+| `Q` | Herramienta de Inspección de Vehículos y Conductores |
 | `1` | Carretera Convencional (90 km/h) |
 | `2` | Autovía 2x2 (120 km/h) |
-| `3` | Enlace / Ramal (80 km/h) |
-| `4` | Control Estático de la Guardia Civil |
-| `5` | Demoler tramo vial |
-| `W`, `A`, `S`, `D` | Desplazamiento de cámara |
+| `3` | Autopista 3x3 de Gran Capacidad (120 km/h) |
+| `4` | Enlace / Ramal de Incorporación (80 km/h) |
+| `5` | Peaje Troncal (+3.50 € por vehículo) |
+| `6` | Paso a Nivel ADIF con Barreras y Tren |
+| `7` | Despachar Grúa de Asistencia 112 |
+| `8` | Control Preventivo DGT / Guardia Civil |
+| `9` | Demoler tramo vial |
+| `W`, `A`, `S`, `D` | Desplazamiento panorámico de cámara |
 | `C` | Centrar cámara en el nudo vial principal |
 | `Espacio` | Pausar / Reanudar simulación |
 
 ---
 
-¡Disfruta probando este primer prototipo jugable! Todos tus comentarios servirán para calibrar el comportamiento de las físicas y la interfaz en Unreal Engine 5.
+¡Disfruta probando este prototipo jugable! Todos tus comentarios servirán para calibrar el comportamiento de las físicas y la interfaz en Unreal Engine 5.

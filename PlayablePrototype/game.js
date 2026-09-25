@@ -56,8 +56,12 @@ const I18N = {
     TOOL_INSPECT: "Inspeccionar",
     TOOL_CONVENCIONAL: "Carretera 90",
     TOOL_AUTOVIA: "Autovía 2x2",
+    TOOL_AUTOVIA_3X3: "Autopista 3x3",
     TOOL_ENLACE: "Enlace / Ramal",
-    TOOL_POLICE: "Control Guardia Civil",
+    TOOL_TOLL: "Peaje Troncal",
+    TOOL_RAILWAY: "Paso a Nivel",
+    TOOL_TOW: "Grúa 112",
+    TOOL_POLICE: "Control DGT",
     TOOL_DEMOLISH: "Demoler",
     HELP_TITLE: "Guía Rápida de Juego y Controles",
     HELP_NAV_TITLE: "🎮 Navegación de Cámara",
@@ -67,6 +71,9 @@ const I18N = {
     TOAST_ROAD_OPEN: "¡Obra finalizada! Tramo abierto al tráfico.",
     TOAST_JAM_TRIGGERED: "¡Retención provocada! Conos desplegados en calzada.",
     TOAST_FINE_ISSUED: "Multa Pegasus: {amount} € por {reason} ({speed} km/h)",
+    TOAST_TOLL_PAID: "Peaje recaudado: +3.50 €",
+    TOAST_TOW_ARRIVED: "Grúa 112 enviada. Retirando vehículo accidentado...",
+    TOAST_TRAIN_CROSSING: "¡Aviso ADIF! Tren aproximándose al Paso a Nivel.",
     TOAST_DANA_ON: "Aviso DGT: Alerta DANA activada. Precaución en calzada.",
     TOAST_DANA_OFF: "Aviso DGT: Temporal finalizado. Vía seca.",
     STATUS_PATROL_ACTIVE: "PATRULLA ACTIVA",
@@ -78,7 +85,11 @@ const I18N = {
     INSPECT_SPEED: "Velocidad",
     INSPECT_LIMIT: "Límite vía",
     INSPECT_MOOD: "Humor conductor",
-    INSPECT_FRUSTRATION: "Frustración"
+    INSPECT_FRUSTRATION: "Frustración",
+    INSPECT_JAM_TIME: "Tiempo en Atasco",
+    INSPECT_STATUS: "Estado",
+    INSPECT_ACTION_FINE: "Sancionar DGT (200 €)",
+    INSPECT_ACTION_TOW: "Enviar Grúa 112"
   },
   en: {
     GAME_TITLE: "Highways of Spain",
@@ -104,7 +115,11 @@ const I18N = {
     TOOL_INSPECT: "Inspect",
     TOOL_CONVENCIONAL: "Road 90 km/h",
     TOOL_AUTOVIA: "Highway 2x2",
+    TOOL_AUTOVIA_3X3: "Highway 3x3",
     TOOL_ENLACE: "Ramp / Link",
+    TOOL_TOLL: "Toll Booth",
+    TOOL_RAILWAY: "Level Crossing",
+    TOOL_TOW: "Tow Truck 112",
     TOOL_POLICE: "Highway Patrol Check",
     TOOL_DEMOLISH: "Demolish",
     HELP_TITLE: "Quick Start Guide & Controls",
@@ -115,6 +130,9 @@ const I18N = {
     TOAST_ROAD_OPEN: "Roadworks complete! New road open to traffic.",
     TOAST_JAM_TRIGGERED: "Traffic jam created! Cones blocking lane.",
     TOAST_FINE_ISSUED: "Pegasus Fine: {amount} € for {reason} ({speed} km/h)",
+    TOAST_TOLL_PAID: "Toll collected: +3.50 €",
+    TOAST_TOW_ARRIVED: "112 Tow truck dispatched. Clearing collision...",
+    TOAST_TRAIN_CROSSING: "ADIF Alert! Train approaching level crossing.",
     TOAST_DANA_ON: "DGT Warning: Heavy rainstorm active. Reduced traction.",
     TOAST_DANA_OFF: "DGT Warning: Storm cleared. Dry pavement.",
     STATUS_PATROL_ACTIVE: "ACTIVE PATROL",
@@ -126,7 +144,11 @@ const I18N = {
     INSPECT_SPEED: "Speed",
     INSPECT_LIMIT: "Road limit",
     INSPECT_MOOD: "Driver mood",
-    INSPECT_FRUSTRATION: "Frustration"
+    INSPECT_FRUSTRATION: "Frustration",
+    INSPECT_JAM_TIME: "Time in Jam",
+    INSPECT_STATUS: "Status",
+    INSPECT_ACTION_FINE: "Issue DGT Fine (200 €)",
+    INSPECT_ACTION_TOW: "Dispatch 112 Tow Truck"
   }
 };
 
@@ -354,11 +376,31 @@ class RoadSegment {
     this.p3 = p3;
 
     // Propiedades según tipo
-    if (type === 'autovia') {
+    if (type === 'autovia_3x3') {
+      this.speedLimit = 120;
+      this.width = 92;
+      this.lanes = 6; // 3 por sentido
+      this.hasMedian = true;
+    } else if (type === 'autovia') {
       this.speedLimit = 120;
       this.width = 64;
       this.lanes = 4; // 2 por sentido
       this.hasMedian = true;
+    } else if (type === 'toll') {
+      this.speedLimit = 40;
+      this.width = 72;
+      this.lanes = 4;
+      this.hasMedian = true;
+      this.isTollBooth = true;
+      this.paidCars = new Set();
+    } else if (type === 'railway') {
+      this.speedLimit = 60;
+      this.width = 36;
+      this.lanes = 2; // calzada que cruza las vías
+      this.hasMedian = false;
+      this.isRailway = true;
+      this.barrierLowered = false;
+      this.trainTimer = 5.0; // tiempo hasta el próximo tren
     } else if (type === 'convencional') {
       this.speedLimit = 90;
       this.width = 36;
@@ -456,14 +498,34 @@ class RoadSegment {
         showToast(t('TOAST_ROAD_OPEN'), 'toast-works', '🚧');
       }
     }
+
+    // Lógica de tren en paso a nivel
+    if (this.isRailway) {
+      this.trainTimer -= dt;
+      if (this.trainTimer <= 0) {
+        this.barrierLowered = !this.barrierLowered;
+        this.trainTimer = this.barrierLowered ? 7.0 : 18.0; // 7s bajada para pasar el tren, 18s subida
+        if (this.barrierLowered) {
+          sounds.playHorn();
+          showToast(t('TOAST_TRAIN_CROSSING'), 'toast-accident', '🚆');
+        }
+      }
+    }
   }
 
   // Retorna la posición transversal de un carril (offset perpendicular al eje)
   getLaneOffset(laneIndex) {
-    // laneIndex va de 0 a (lanes-1)
-    if (this.type === 'autovia') {
-      // 4 carriles: 0 y 1 sentido normal, 2 y 3 sentido contrario
-      // Separados por mediana de 8px
+    if (this.type === 'autovia_3x3') {
+      switch (laneIndex) {
+        case 0: return -32; // Carril derecho sentido A
+        case 1: return -20; // Carril central sentido A
+        case 2: return -8;  // Carril izquierdo sentido A
+        case 3: return 8;   // Carril izquierdo sentido B
+        case 4: return 20;  // Carril central sentido B
+        case 5: return 32;  // Carril derecho sentido B
+        default: return -20;
+      }
+    } else if (this.type === 'autovia' || this.type === 'toll') {
       switch (laneIndex) {
         case 0: return -18; // Carril derecho (sentido A)
         case 1: return -6;  // Carril izquierdo (adelantamiento sentido A)
@@ -471,11 +533,9 @@ class RoadSegment {
         case 3: return 18;  // Carril derecho (sentido B)
         default: return -12;
       }
-    } else if (this.type === 'convencional') {
-      // 2 carriles: 0 sentido A, 1 sentido B
+    } else if (this.type === 'convencional' || this.type === 'railway') {
       return laneIndex === 0 ? -9 : 9;
     } else {
-      // Enlace: 1 carril centrado
       return 0;
     }
   }
@@ -487,12 +547,16 @@ class RoadSegment {
 class Vehicle {
   constructor(id, type, road, laneIndex, distance = 0) {
     this.id = id;
-    this.type = type; // 'turismo', 'camion', 'furgoneta', 'guardia_civil'
+    this.type = type; // 'turismo', 'camion', 'furgoneta', 'guardia_civil', 'grua'
     this.road = road;
     this.laneIndex = laneIndex;
     this.distance = distance; // Distancia recorrida en metros a lo largo del spline
     this.v = 0; // Velocidad actual en m/s
     this.acc = 0;
+    this.jamTime = 0.0;
+    this.isTowed = false;
+    this.isAccident = false;
+    this.isBrokenDown = false;
 
     // Configuración física según tipo
     this.initPhysics();
@@ -516,9 +580,11 @@ class Vehicle {
     this.targetLateralOffset = this.lateralOffset;
 
     // Dirección de circulación en el spline (sentido +1 o -1)
-    if (this.road.type === 'autovia') {
+    if (this.road.type === 'autovia_3x3') {
+      this.direction = (laneIndex <= 2) ? 1 : -1;
+    } else if (this.road.type === 'autovia' || this.road.type === 'toll') {
       this.direction = (laneIndex <= 1) ? 1 : -1;
-    } else if (this.road.type === 'convencional') {
+    } else if (this.road.type === 'convencional' || this.road.type === 'railway') {
       this.direction = (laneIndex === 0) ? 1 : -1;
     } else {
       this.direction = 1;
@@ -723,6 +789,32 @@ class Vehicle {
       }
     }
 
+    // Parada ante barreras bajadas en Paso a Nivel ADIF
+    if (this.road.isRailway && this.road.barrierLowered) {
+      const barrierDist = Math.abs(this.road.length * 0.5 - this.distance);
+      if (barrierDist < frontDist && (this.road.length * 0.5 - this.distance) * this.direction > 0) {
+        frontVehicle = { v: 0, length: 3 };
+        frontDist = Math.max(1, barrierDist - 6);
+      }
+    }
+
+    // Parada y abono de tarifa en Peaje Troncal
+    if (this.road.isTollBooth) {
+      const tollDist = Math.abs(this.road.length * 0.5 - this.distance);
+      if (tollDist < frontDist && (this.road.length * 0.5 - this.distance) * this.direction > 0) {
+        if (!this.road.paidCars.has(this.id) && tollDist < 10) {
+          this.road.paidCars.add(this.id);
+          GameState.budget += 3.50;
+          sounds.playCash();
+          showToast(t('TOAST_TOLL_PAID'), 'toast-fine', '💳');
+          floatingTexts.push({ text: "+3.50 €", x: this.x, y: this.y - 15, life: 2.0, alpha: 1.0 });
+        } else if (!this.road.paidCars.has(this.id)) {
+          frontVehicle = { v: 0, length: 2 };
+          frontDist = Math.max(1, tollDist - 4);
+        }
+      }
+    }
+
     // Evaluar cambio de carril MOBIL
     this.checkMOBILLaneChange(vehiclesOnRoad, dt);
 
@@ -732,6 +824,13 @@ class Vehicle {
 
     // Actualizar distancia en el trazado
     this.distance += this.v * dt * this.direction;
+
+    // Medición de tiempo en atasco
+    if (this.v * 3.6 < 12) {
+      this.jamTime = (this.jamTime || 0) + dt;
+    } else {
+      this.jamTime = Math.max(0, (this.jamTime || 0) - dt * 0.5);
+    }
 
     // Actualizar Psicología / Frustración
     if (GameState.rageEnabled) {
@@ -1051,13 +1150,17 @@ class GameEngine {
     window.addEventListener('keydown', (e) => {
       this.camera.keys[e.code] = true;
 
-      // Atajos de herramientas numéricos (1, 2, 3, 4, 5) y Q
+      // Atajos de herramientas numéricos (1 a 9) y Q
       if (e.code === 'KeyQ') selectTool('inspect');
       if (e.code === 'Digit1') selectTool('convencional');
       if (e.code === 'Digit2') selectTool('autovia');
-      if (e.code === 'Digit3') selectTool('enlace');
-      if (e.code === 'Digit4') selectTool('police_check');
-      if (e.code === 'Digit5') selectTool('demolish');
+      if (e.code === 'Digit3') selectTool('autovia_3x3');
+      if (e.code === 'Digit4') selectTool('enlace');
+      if (e.code === 'Digit5') selectTool('toll');
+      if (e.code === 'Digit6') selectTool('railway');
+      if (e.code === 'Digit7') selectTool('tow_truck');
+      if (e.code === 'Digit8') selectTool('police_check');
+      if (e.code === 'Digit9') selectTool('demolish');
 
       // Centrar cámara con C
       if (e.code === 'KeyC') this.camera.centerOn(950, 490, 0.95);
@@ -1081,7 +1184,6 @@ class GameEngine {
       const newZoom = Math.max(this.camera.minZoom, Math.min(this.camera.maxZoom, this.camera.targetZoom * zoomFactor));
 
       this.camera.targetZoom = newZoom;
-      // Ajustar objetivo para centrarse en la posición del ratón
       this.camera.targetX += (mouse.x - this.camera.targetX) * (1 - 1 / zoomFactor) * 0.5;
       this.camera.targetY += (mouse.y - this.camera.targetY) * (1 - 1 / zoomFactor) * 0.5;
     }, { passive: false });
@@ -1105,12 +1207,13 @@ class GameEngine {
       if (e.button === 0) {
         if (GameState.activeTool === 'inspect') {
           this.inspectAt(worldPos);
-        } else if (['convencional', 'autovia', 'enlace'].includes(GameState.activeTool)) {
+        } else if (['convencional', 'autovia', 'autovia_3x3', 'enlace', 'toll', 'railway'].includes(GameState.activeTool)) {
           GameState.isDrawing = true;
-          // Ajuste a nudo existente si está cerca (< 30px)
           const snapped = this.getSnapPoint(worldPos);
           GameState.drawStart = snapped;
           GameState.drawCurrent = snapped;
+        } else if (GameState.activeTool === 'tow_truck') {
+          this.dispatchTowTruck(worldPos);
         } else if (GameState.activeTool === 'police_check') {
           this.deployPoliceCheckpoint(worldPos);
         } else if (GameState.activeTool === 'demolish') {
@@ -1143,7 +1246,7 @@ class GameEngine {
         GameState.isDrawing = false;
         if (GameState.drawStart && GameState.drawCurrent) {
           const d = Math.hypot(GameState.drawCurrent.x - GameState.drawStart.x, GameState.drawCurrent.y - GameState.drawStart.y);
-          if (d > 50) { // Longitud mínima de tramo 50 metros
+          if (d > 40) {
             this.buildRoadSegment(GameState.drawStart, GameState.drawCurrent, GameState.activeTool);
           }
         }
@@ -1152,7 +1255,6 @@ class GameEngine {
       }
     });
 
-    // Desactivar menú contextual con click derecho
     this.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
   }
 
@@ -1166,7 +1268,6 @@ class GameEngine {
   }
 
   buildRoadSegment(pStart, pEnd, toolType) {
-    // Generar puntos de control Bézier cúbica con suavizado de curva natural
     const dx = pEnd.x - pStart.x;
     const dy = pEnd.y - pStart.y;
     const p1 = { x: pStart.x + dx * 0.33, y: pStart.y + dy * 0.33 };
@@ -1175,14 +1276,13 @@ class GameEngine {
     const segment = new RoadSegment(this.nextRoadId++, toolType, pStart, p1, p2, pEnd);
 
     // Deducción de coste de obra (€)
-    const costPerMeter = toolType === 'autovia' ? 850 : 450;
+    const costPerMeter = toolType === 'autovia_3x3' ? 1200 : toolType === 'autovia' ? 850 : toolType === 'toll' ? 1500 : toolType === 'railway' ? 950 : 450;
     const totalCost = Math.round(segment.length * costPerMeter);
     GameState.budget = Math.max(0, GameState.budget - totalCost);
 
     sounds.playClick();
     this.roads.push(segment);
 
-    // Notificación según estado de obras
     if (GameState.worksEnabled) {
       showToast(`Obras iniciadas en nuevo tramo (-${totalCost.toLocaleString()} €)`, 'toast-works', '🚧');
     } else {
@@ -1194,8 +1294,7 @@ class GameEngine {
     for (const r of this.roads) {
       for (const sample of r.samples) {
         if (Math.hypot(sample.pt.x - pt.x, sample.pt.y - pt.y) < 35) {
-          // Desplegar control de alcoholemia/Guardia Civil
-          r.blockedLanes[0] = !r.blockedLanes[0]; // Alternar bloqueo
+          r.blockedLanes[0] = !r.blockedLanes[0];
           sounds.playHorn();
           showToast("Control Guardia Civil desplegado en calzada.", 'toast-accident', '🚓');
           return;
@@ -1204,12 +1303,39 @@ class GameEngine {
     }
   }
 
+  dispatchTowTruck(pt) {
+    if (this.roads.length === 0) return;
+    let target = null;
+    let minDist = 120;
+    for (const v of this.vehicles) {
+      const d = Math.hypot(v.x - pt.x, v.y - pt.y);
+      if (d < minDist) {
+        minDist = d;
+        target = v;
+      }
+    }
+    if (!target) {
+      target = this.vehicles.find(v => v.mood === 'road_rage' || v.isBrokenDown || v.isAccident);
+    }
+    if (target) {
+      target.isTowed = true;
+      sounds.playChime();
+      showToast(t('TOAST_TOW_ARRIVED'), 'toast-fine', '🚚');
+      target.road.blockedLanes = {};
+      setTimeout(() => {
+        this.vehicles = this.vehicles.filter(v => v !== target);
+        showToast("Vehículo retirado al depósito. Vía despejada.", 'toast-works', '✅');
+      }, 2500);
+    } else {
+      showToast("No se detectan incidentes en la zona seleccionada.", 'toast-works', 'ℹ️');
+    }
+  }
+
   demolishAt(pt) {
     for (let i = this.roads.length - 1; i >= 0; i--) {
       const r = this.roads[i];
       for (const sample of r.samples) {
         if (Math.hypot(sample.pt.x - pt.x, sample.pt.y - pt.y) < 30) {
-          // Eliminar vehículos en esta vía
           this.vehicles = this.vehicles.filter(v => v.road !== r);
           this.roads.splice(i, 1);
           sounds.playClick();
@@ -1222,7 +1348,7 @@ class GameEngine {
 
   inspectAt(pt) {
     let closest = null;
-    let minDist = 30;
+    let minDist = 40;
     for (const v of this.vehicles) {
       const d = Math.hypot(v.x - pt.x, v.y - pt.y);
       if (d < minDist) {
@@ -1231,11 +1357,35 @@ class GameEngine {
       }
     }
     GameState.selectedVehicle = closest;
-    if (closest) {
+    const insp = document.getElementById('vehicle-inspector');
+    if (closest && insp) {
       sounds.playClick();
-      const speedKmh = Math.round(closest.v * 3.6);
-      showToast(`Vehículo: ${closest.type.toUpperCase()} | Vel: ${speedKmh} km/h | Humor: ${closest.mood.toUpperCase()} (${Math.round(closest.frustration)}%)`, 'toast-fine', '🔍');
+      insp.classList.remove('hidden');
+      this.updateInspectorCard(closest);
+    } else if (insp) {
+      insp.classList.add('hidden');
     }
+  }
+
+  updateInspectorCard(v) {
+    if (!v) return;
+    const spd = Math.round(v.v * 3.6);
+    const typeLabel = v.type === 'camion' ? 'CAMIÓN ARTICULADO' : v.type === 'furgoneta' ? 'FURGONETA REPARTO' : v.type === 'guardia_civil' ? 'GUARDIA CIVIL TRÁFICO' : 'TURISMO COMPACTO';
+    document.getElementById('insp-type').textContent = typeLabel;
+    document.getElementById('insp-icon').textContent = v.type === 'camion' ? '🚛' : v.type === 'furgoneta' ? '🚐' : v.type === 'guardia_civil' ? '🚓' : '🚗';
+    document.getElementById('insp-plate').textContent = `${(1000 + v.id * 17) % 9000 + 1000}-DGT`;
+    document.getElementById('insp-speed').innerHTML = `${spd} km/h <span class="insp-sub">/ ${v.road ? v.road.speedLimit : 120}</span>`;
+
+    const moodEmoji = v.mood === 'road_rage' ? '😡' : v.mood === 'impatient' ? '😐' : '🙂';
+    const moodText = v.mood === 'road_rage' ? t('HUD_ROAD_RAGE') : v.mood === 'impatient' ? 'Impaciente' : 'Tranquilo';
+    document.getElementById('insp-mood-emoji').textContent = moodEmoji;
+    document.getElementById('insp-mood-text').textContent = moodText;
+
+    const frust = Math.round(v.frustration);
+    document.getElementById('insp-frustration-val').textContent = `${frust}%`;
+    document.getElementById('insp-frustration-fill').style.width = `${frust}%`;
+    document.getElementById('insp-jam-time').textContent = `${(v.jamTime || 0).toFixed(1)} s`;
+    document.getElementById('insp-incident-status').textContent = v.isTowed ? 'En grúa' : (spd < 5 ? 'Detenido en retención' : 'Circulando con normalidad');
   }
 
   // ==========================================================================
@@ -1359,6 +1509,42 @@ class GameEngine {
         sounds.playClick();
       };
     });
+
+    // Acciones de la Tarjeta de Inspección de Vehículo
+    const btnCloseInsp = document.getElementById('btn-close-inspector');
+    if (btnCloseInsp) {
+      btnCloseInsp.onclick = () => {
+        document.getElementById('vehicle-inspector')?.classList.add('hidden');
+        GameState.selectedVehicle = null;
+        sounds.playClick();
+      };
+    }
+
+    const btnInspFine = document.getElementById('btn-insp-fine');
+    if (btnInspFine) {
+      btnInspFine.onclick = () => {
+        if (GameState.selectedVehicle) {
+          GameState.budget += 200;
+          GameState.pegasusInfractions++;
+          GameState.pegasusCollected += 200;
+          sounds.playCash();
+          showToast("Boletín de sanción DGT emitido (+200 €)", 'toast-fine', '⚡');
+          floatingTexts.push({ text: "+200 €", x: GameState.selectedVehicle.x, y: GameState.selectedVehicle.y - 20, life: 2.5, alpha: 1.0 });
+          GameState.selectedVehicle.frustration = Math.max(0, GameState.selectedVehicle.frustration - 35);
+          GameState.selectedVehicle.mood = 'zen';
+          addPegasusLogEntry(200, "Sanción DGT manual", Math.round(GameState.selectedVehicle.v * 3.6));
+        }
+      };
+    }
+
+    const btnInspTow = document.getElementById('btn-insp-tow');
+    if (btnInspTow) {
+      btnInspTow.onclick = () => {
+        if (GameState.selectedVehicle) {
+          this.dispatchTowTruck({ x: GameState.selectedVehicle.x, y: GameState.selectedVehicle.y });
+        }
+      };
+    }
   }
 
   // ==========================================================================
@@ -1366,6 +1552,16 @@ class GameEngine {
   // ==========================================================================
   update(dt) {
     this.camera.update(dt);
+
+    // Actualizar tarjeta de inspección activa en tiempo real
+    if (GameState.selectedVehicle) {
+      if (!this.vehicles.includes(GameState.selectedVehicle)) {
+        document.getElementById('vehicle-inspector')?.classList.add('hidden');
+        GameState.selectedVehicle = null;
+      } else {
+        this.updateInspectorCard(GameState.selectedVehicle);
+      }
+    }
 
     if (GameState.timeSpeed > 0) {
       const simDt = dt * GameState.timeSpeed;
@@ -1621,15 +1817,13 @@ class GameEngine {
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
       ctx.lineWidth = 1.5;
 
-      // Desplazar a cada lado de la mediana
       [-12, 12].forEach(offset => {
         ctx.beginPath();
         for (let i = 0; i < road.samples.length; i++) {
           const s = road.samples[i];
-          const t = s.pt;
           const tang = road.getTangentAt(s.t);
-          const px = t.x - Math.sin(tang.angle) * offset;
-          const py = t.y + Math.cos(tang.angle) * offset;
+          const px = s.pt.x - Math.sin(tang.angle) * offset;
+          const py = s.pt.y + Math.cos(tang.angle) * offset;
           if (i === 0) ctx.moveTo(px, py);
           else ctx.lineTo(px, py);
         }
@@ -1637,8 +1831,116 @@ class GameEngine {
       });
       ctx.restore();
 
+    } else if (road.type === 'autovia_3x3') {
+      // Autopista 3x3 de Gran Capacidad
+      ctx.save();
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 7;
+      ctx.stroke();
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.save();
+      ctx.setLineDash([12, 18]);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+      ctx.lineWidth = 1.5;
+
+      [-26, -14, 14, 26].forEach(offset => {
+        ctx.beginPath();
+        for (let i = 0; i < road.samples.length; i++) {
+          const s = road.samples[i];
+          const tang = road.getTangentAt(s.t);
+          const px = s.pt.x - Math.sin(tang.angle) * offset;
+          const py = s.pt.y + Math.cos(tang.angle) * offset;
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+      });
+      ctx.restore();
+
+    } else if (road.type === 'toll') {
+      // Peaje Troncal con marquesina
+      const mid = road.getPointAt(0.5);
+      const tang = road.getTangentAt(0.5);
+      ctx.save();
+      ctx.translate(mid.x, mid.y);
+      ctx.rotate(tang.angle);
+      ctx.fillStyle = '#0284c7';
+      ctx.fillRect(-22, -road.width / 2 - 8, 44, road.width + 16);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(-22, -road.width / 2 - 8, 44, road.width + 16);
+      ctx.font = 'bold 9px sans-serif';
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.fillText('PEAJE 3.50 €', 0, -road.width / 2 - 12);
+      ctx.restore();
+
+    } else if (road.type === 'railway') {
+      // Paso a Nivel y Vía Férrea transversal
+      const mid = road.getPointAt(0.5);
+      const tang = road.getTangentAt(0.5);
+      ctx.save();
+      ctx.translate(mid.x, mid.y);
+      ctx.rotate(tang.angle + Math.PI / 2);
+
+      // Balasto
+      ctx.fillStyle = '#475569';
+      ctx.fillRect(-100, -10, 200, 20);
+
+      // Traviesas de madera
+      ctx.fillStyle = '#78350f';
+      for (let tx = -95; tx <= 95; tx += 14) {
+        ctx.fillRect(tx, -9, 7, 18);
+      }
+
+      // Raíles
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(-100, -5); ctx.lineTo(100, -5);
+      ctx.moveTo(-100, 5); ctx.lineTo(100, 5);
+      ctx.stroke();
+
+      // Semibarreras abatibles si está bajada
+      if (road.barrierLowered) {
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 4;
+        ctx.setLineDash([8, 8]);
+        ctx.beginPath();
+        ctx.moveTo(-35, -14); ctx.lineTo(35, -14);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        const flash = Math.sin(Date.now() * 0.015) > 0;
+        ctx.fillStyle = flash ? '#ef4444' : '#7f1d1d';
+        ctx.beginPath();
+        ctx.arc(-35, -14, 4, 0, Math.PI * 2);
+        ctx.arc(35, -14, 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Tren de mercancías cruzando
+        const trainTime = Date.now() * 0.12;
+        const trainX = ((trainTime % 700) - 350);
+        ctx.save();
+        ctx.translate(trainX, 0);
+        ctx.fillStyle = '#dc2626';
+        ctx.fillRect(-35, -7, 32, 14);
+        ctx.fillStyle = '#fef08a';
+        ctx.fillRect(-6, -4, 4, 8);
+        const vagColors = ['#2563eb', '#16a34a', '#d97706', '#9333ea'];
+        vagColors.forEach((col, idx) => {
+          ctx.fillStyle = col;
+          ctx.fillRect(-70 - idx * 34, -6, 28, 12);
+        });
+        ctx.restore();
+      }
+      ctx.restore();
+
     } else if (road.type === 'convencional') {
-      // Carretera 90: línea continua o discontinua central
       ctx.save();
       ctx.setLineDash([8, 14]);
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
@@ -1744,13 +2046,15 @@ class GameEngine {
     ctx.stroke();
 
     const d = Math.round(Math.hypot(GameState.drawCurrent.x - GameState.drawStart.x, GameState.drawCurrent.y - GameState.drawStart.y));
-    const cost = d * (GameState.activeTool === 'autovia' ? 850 : 450);
+    const costPerMeter = GameState.activeTool === 'autovia_3x3' ? 1200 : GameState.activeTool === 'autovia' ? 850 : GameState.activeTool === 'toll' ? 1500 : GameState.activeTool === 'railway' ? 950 : 450;
+    const cost = d * costPerMeter;
+    const toolLabel = GameState.activeTool === 'autovia_3x3' ? 'Autopista 3x3' : GameState.activeTool === 'autovia' ? 'Autovía 2x2' : GameState.activeTool === 'toll' ? 'Peaje' : GameState.activeTool === 'railway' ? 'Paso a Nivel' : 'Vía';
 
     ctx.font = 'bold 13px monospace';
     ctx.fillStyle = '#fff';
     ctx.shadowColor = '#000';
     ctx.shadowBlur = 4;
-    ctx.fillText(`${d} m | ${cost.toLocaleString()} €`, GameState.drawCurrent.x + 15, GameState.drawCurrent.y - 15);
+    ctx.fillText(`${toolLabel}: ${d} m | ${cost.toLocaleString()} €`, GameState.drawCurrent.x + 15, GameState.drawCurrent.y - 15);
     ctx.restore();
   }
 
